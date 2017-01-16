@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <title>Возможности ES2015/ES2016/ES2017 сегодня</title>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="node_modules/shower-ribbon/styles/screen-4x3.css">
+    <link rel="stylesheet" href="css/prism.css">
+    <link rel="stylesheet" href="css/prism-fix.css">
+    <link rel="stylesheet" href="css/netology.css">
+  </head>
+  <body class="shower">
+    <header class="caption">
+      <h1>Возможности ES2015/ES2016/ES2017 сегодня</h1>
+      <p>Дима Фитискин, Нетология</p>
+    </header>
+
+    <section class="slide" id="cover">
+      <h2>Возможности ES2015/ES2016/ES2017 сегодня</h2>
+      <p>
+        <img src="i/dfitiskin.jpg" alt="" class="avatar">
+        Дмитрий Фитискин <span class="position">Нетология</span>
+      </p>
+    </section>
+
+    <section class="slide chapter">
+      <h2>Подготовка</h2>
+    </section>
+    <section class="slide">
+      <h2>Шаг 1. Настраиваем <code>npm</code></h2>
+      <pre>
+        <code class="language-markup">
+          $ mkdir babel-test
+          $ cd babel-test
+          $ npm init -y
+          Wrote to /path/to/babel-test/package.json:
+
+          {
+            "name": "babel-test",
+            "version": "1.0.0",
+            "description": "",
+            "main": "index.js",
+            …
+          }
+          $
+        </code>
+      </pre>
+    </section>
+
+    <section class="slide">
+      <h2>Шаг 2. Устанавливаем <code>babel-cli</code></h2>
+      <pre>
+        <code class="language-markup">
+          $ npm i -D babel-cli babel-preset-es2015
+          babel-test@1.0.0 /path/to/babel-test
+          └─┬ babel-cli@6.16.0
+          └─┬ babel-preset-es2015@6.16.0
+          $
+        </code>
+      </pre>
+    </section>
+
+    <section class="slide">
+      <h2>Шаг 3. Настраиваем <code>babel-cli</code></h2>
+      <p>Открываем в редакторе файл <code>package.json</code></p>
+      <pre data-start="13">
+        <code class="language-json line-numbers">
+          {
+            // ...
+            "devDependencies": {
+              "babel-cli": "^6.16.0",
+              "babel-preset-es2015": "^6.16.0"
+            },
+            <mark>"babel": {
+              "presets": [
+                "es2015"
+              ]
+            }</mark>
+          }
+        </code>
+      </pre>
+    </section>
+
+    <section class="slide">
+      <h2>Шаг 4. Настраиваем запуск через <code>npm</code></h2>
+      <p>В том же файле файл <code>package.json</code></p>
+      <pre data-start="13">
+        <code class="language-json line-numbers">
+          {
+            "main": "index.js",
+            "scripts": {
+              <mark>"start": "babel-node .",</mark>
+              "test": "echo \"Error: no test specified\" && exit 1"
+            },
+            "keywords": [],
+          }
+        </code>
+      </pre>
+    </section>
+
+    <section class="slide">
+      <h2>Шаг 5. Создаём файл <code>index.js</code></h2>
+      <pre>
+        <code class="language-javascript line-numbers">
+          import { log } from './src/helpers';
+
+          const name = 'Нетология';
+          log(`Привет, ${name}!`);
+        </code>
+      </pre>
+      <p>Создаем файл <code>./src/helpers.js</code></p>
+      <pre>
+        <code class="language-javascript line-numbers">
+          export function log(...args) {
+            console.log(...args);
+          }
+        </code>
+      </pre>
+    </section>
+
+    <section class="slide">
+      <h2>Шаг 6. Запускаем наш код</h2>
+      <pre>
+        <code class="language-markup">
+          $ npm start
+
+          > babel-test@1.0.0 start /path/to/babel-test
+          > babel-node .
+
+          Привет, Нетология!
+          $
+        </code>
+      </pre>
+      <p>Отлично, <code>export</code> и <code>import</code> из ES2015 работают.</p>
+    </section>
+
+    <section class="slide chapter">
+      <h2>Генераторы</h2>
+    </section>
+    <section class="slide">
+      <h2>Создаем генератор имен</h2>
+      <p>В файле <code>./src/names.js</code></p>
+      <pre>
+        <code class="language-javascript line-numbers">
+          export default function * () {
+            yield 'Иван';
+            yield 'Мария';
+            yield 'Николай';
+          };
+        </code>
+      </pre>
+    </section>
+    <section class="slide">
+      <h2>Выводим имена</h2>
+      <p>В файле <code>./index.js</code></p>
+      <pre>
+        <code class="language-javascript line-numbers">
+          import { log } from './src/helpers';
+          import names from './src/names';
+
+          for (let name of names()) {
+            log(`Привет, ${name}!`);
+          }
+        </code>
+      </pre>
+    </section>
+    <section class="slide">
+      <h2>Результат</h2>
+      <pre>
+        <code class="language-markup">
+          $ npm start
+          > babel-test@1.0.0 start /path/to/babel-test
+          > babel-node .
+
+          Привет, Иван!
+          Привет, Мария!
+          Привет, Николай!
+          $
+        </code>
+      </pre>
+      <p>Отлично, генераторы из ES2015 работают.</p>
+    </section>
+
+    <section class="slide chapter">
+      <h2>Оператор возведения в степень из ES2016</h2>
+    </section>
+    <section class="slide">
+      <h2>Возведем в квадрат несколько чисел</h2>
+      <p>В файле <code>./index.js</code></p>
+      <pre>
+        <code class="language-javascript line-numbers">
+          import { log } from './src/helpers';
+          import names from './src/names';
+
+          for (let name of names()) {
+            log(`Привет, ${name}!`);
+          }
+
+          [1, 2, 3, 4, 5]
+            .map(number => number ** 2)
+            .forEach(log);
+        </code>
+      </pre>
+    </section>
+    <section class="slide">
+      <h2>Шаг 2.1 Устанавливаем пресет для поддержки ES2016</h2>
+      <pre>
+        <code class="language-markup">
+          $ npm i -D babel-preset-es2016
+          babel-test@1.0.0 /path/to/babel-test
+          └─┬ babel-preset-es2016@6.16.0
+          $
+        </code>
+      </pre>
+    </section>
+    <section class="slide">
+      <h2>Шаг 2.2 Настраиваем <code>babel-cli</code></h2>
+      <p>Открываем в редакторе файл <code>package.json</code></p>
+      <pre data-start="13">
+        <code class="language-json line-numbers">
+          {
+            // ...
+            "devDependencies": {
+              "babel-cli": "^6.16.0",
+              "babel-preset-es2015": "^6.16.0",
+              "babel-preset-es2016": "^6.16.0"
+            },
+            <mark>"babel": {
+              "presets": [
+                "es2015",
+                <mark>"es2016"</mark>
+              ]
+            }</mark>
+          }
+        </code>
+      </pre>
+    </section>
+    <section class="slide">
+      <h2>Результат</h2>
+      <pre>
+        <code class="language-markup">
+          $ npm start
+          > babel-test@1.0.0 start /path/to/babel-test
+          > babel-node .
+
+          Привет, Иван!
+          Привет, Мария!
+          Привет, Николай!
+          1 0 [ 1, 4, 9, 16, 25 ]
+          4 1 [ 1, 4, 9, 16, 25 ]
+          9 2 [ 1, 4, 9, 16, 25 ]
+          16 3 [ 1, 4, 9, 16, 25 ]
+          25 4 [ 1, 4, 9, 16, 25 ]
+          $
+        </code>
+      </pre>
+    </section>
+
+    <section class="slide chapter">
+      <h2>Асинхронные функции из ES2017</h2>
+    </section>
+    <section class="slide">
+      <h2>Реализуем таймер</h2>
+      <p>В файле <code>./src/timer.js</code></p>
+      <pre>
+        <code class="language-javascript line-numbers">
+          export default async function(time) {
+            return new Promise(resolve => {
+              setTimeout(() => resolve(42), time);
+            })
+          };
+        </code>
+      </pre>
+    </section>
+    <section class="slide">
+      <h2>Считаем синхронно с асинхронным таймером</h2>
+      <p>В файле <code>./index.js</code></p>
+      <pre>
+        <code class="language-javascript line-numbers">
+          import { log } from './src/helpers';
+          import names from './src/names';
+          import timer from './src/timer';
+
+          log(11 + await timer(10));
+
+          for (let name of names()) {
+            log(`Привет, ${name}!`);
+          }
+
+          [1, 2, 3, 4, 5]
+            .map(number => number ** 2)
+            .forEach(log);
+        </code>
+      </pre>
+    </section>
+
+
+    <div class="progress"></div>
+    <script src="shower/shower.min.js"></script>
+    <script src="js/prism.js?v=2"></script>
+    <script src="https://use.fontawesome.com/30b5a52164.js"></script>
+  </body>
+</html>

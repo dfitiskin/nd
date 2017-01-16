@@ -185,7 +185,7 @@ h2:not(.shout):before {
 /* End */
 
 /* Блоки с цифрами и подписями */
-dl {
+dl.highlights {
   display: inline-block;
   max-width: 25%;
   padding: 0 15px;
@@ -194,13 +194,13 @@ dl {
   box-sizing: border-box;
 }
 
-dt {
+dl.highlights dt {
   font-size: 72px;
   font-weight: 700;
   line-height: 1.5;
 }
 
-dt:after {
+dl.highlights dt:after {
   content: "";
   display: block;
   width: 65px;
@@ -209,9 +209,24 @@ dt:after {
   margin: 0 auto 30px;
 }
 
-dd {
+dl.highlights dd {
   font-size: 20px;
   line-height: 1.2;
+}
+
+dt {
+  float: left;
+  font-weight: bold;
+}
+
+dt::after {
+  content: "—";
+  padding-left: 0.5em;
+  padding-right: 0.5em;
+}
+
+dd {
+
 }
 
 /* Четыре блока с подписями в ряд */
@@ -434,5 +449,16 @@ address {
 .chapter h2 {
   font-size: 86px;
   width: 100%;
+}
+
+.two-pictures {
+    display: block;
+    position: relative;
+}
+
+.two-pictures img {
+    display: inline-block;
+    max-width: 50%;
+    vertical-align: bottom;
 }
 /* End */

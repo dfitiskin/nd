@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="shower/themes/ribbon/styles/screen-16x10.css">
+  <link rel="stylesheet" href="node_modules/shower-ribbon/styles/screen-4x3.css">
   <link rel="stylesheet" href="css/prism.css">
   <link rel="stylesheet" href="css/prism-fix.css">
   <link rel="stylesheet" href="css/netology.css">
@@ -43,48 +43,86 @@
     </ol>
   </section>
 
-  <section class="slide chapter" id="require">
-    <h2>Подключение модулей</h2>
+  <section class="slide chapter" id="single-file">
+    <h2>Работа с <code>js</code>, <code>json</code> и <code>node</code> файлами.</h2>
   </section>
   <section class="slide">
-    <h2>Используем <code>require</code></h2>
-    <p>
-      Например, весь функционал взаимодействия с файловой системой реализован в модуле <code>fs</code>, и чтобы его использовать нам нужно его подключить:
-    </p>
+    <h2>Примерный код домашней работы по ES2015</h2>
     <pre>
       <code class="language-javascript line-numbers">
-        const fs = require('fs');
+        class Pokemon {};
+        class PokemonList {};
 
-        /*
-         * Используем объект fs
-         */
+        const pokenons = [{}, {}, {}];
+
+        const objects = pokenons.map(
+          obj => new Pokemon(obj.name, obj.level)
+        );
+        const lost = new PokemonList(...objects.slice(0, 10));
+        const found = new PokemonList(...objects.slice(10));
+      </code>
+    </pre>
+    <p>Реально код выполняющий какие-то действия начинается далеко не сразу.</p>
+  </section>
+  <section class="slide">
+    <h2>В чем проблема такого кода?</h2>
+    <ul>
+      <li>Суть решаемой задачи ускользает за деталями реализации.</li>
+      <li>Отдельные части кода не использовать в других проектах.</li>
+      <li>Файл получается слишком большой и без навигатора в нем сложно ориентироваться.</li>
+    </ul>
+    <p>Как это исправить? Лучше всего разбить наш код на части.</p>
+  </section>
+  <section class="slide">
+    <h2>Вынесем описание класса в отдельный файл</h2>
+    <p>Файл <code>pokemon.js</code>:</p>
+    <pre>
+      <code class="language-javascript line-numbers">
+        class Pokemon {};
+      </code>
+    </pre>
+    <p>Файл <code>pokemonlist.js</code>:</p>
+    <pre>
+      <code class="language-javascript line-numbers">
+        class PokemonList {};
       </code>
     </pre>
   </section>
   <section class="slide">
-    <h2>Мы можем присвоить модуль в любую переменную</h2>
-    <p>
-      Функция <code>require</code> по сути возвращает то что является модулем. Это не обязательно объект. И мы присваиваем результат в переменную, или можем его тут же использовать
-    </p>
+    <h2>Вынесем данные</h2>
+    <p>Так же, вынесем данные покемонов в отдельный файл <code>pokemons.json</code>:</p>
     <pre>
-      <code class="language-javascript line-numbers">
-        const <mark>fileSystem</mark> = require('fs');
-
-        /*
-         * Используем объект fileSystem
-         */
+      <code class="language-json line-numbers">
+        [
+          {"name": "Bulbasaur", "level": 12},
+          {"name": "Ivysaur", "level": 17},
+          {"name": "Venusaur", "level": 22},
+          {"name": "Charmander", "level": 51}
+        ]
       </code>
     </pre>
+  </section>
+  <section class="slide">
+    <h2>Как нам теперь получить классы и данные?</h2>
+    <p>Код после выноса классов и данных, <mark>естественно не работает</mark>:</p>
+    <pre>
+      <code class="language-javascript line-numbers">
+        const objects = pokenons.map(
+          obj => new Pokemon(obj.name, obj.level)
+        );
+        const lost = new PokemonList(...objects.slice(0, 10));
+        const found = new PokemonList(...objects.slice(10));
+      </code>
+    </pre>
+    <p>Но зато теперь тут все четко и по делу.</p>
   </section>
 
   <section class="slide chapter" id="module.exports">
     <h2>Создание собственных модулей</h2>
   </section>
   <section class="slide">
-    <h2>Создадим наш модуль</h2>
-    <p>
-      В файле <code>lib/random.js</code>
-    </p>
+    <h2>Создадим простой модуль модуль</h2>
+    <p>В файле <code>random.js</code> реализуем функцию генерации случайного числа:</p>
     <pre>
       <code class="language-javascript line-numbers">
         const random = (min, max) => {
@@ -98,9 +136,7 @@
   </section>
   <section class="slide">
     <h2>Экспортируем нашу функцию</h2>
-    <p>
-      Для этого нужно присвоить её в <code>module.exports</code>
-    </p>
+    <p>Для этого нужно присвоить её в <code>module.exports</code></p>
     <pre>
       <code class="language-javascript line-numbers">
         const random = (min, max) => {
@@ -113,12 +149,11 @@
         <mark>module.exports = random;</mark>
       </code>
     </pre>
+    <p><code>module</code> специальная переменная, доступная в любом модуле, которая содержит информацию о модуле: имя файла, дочерние модули, родительский модуль.</p>
   </section>
   <section class="slide">
     <h2>В некоторых случаях промежуточные переменные не нужны</h2>
-    <p>
-      Можно присвоить сразу в <code>module.exports</code>
-    </p>
+    <p>Можно присвоить сразу в <code>module.exports</code></p>
     <pre>
       <code class="language-javascript line-numbers">
         <mark>module.exports =</mark> (min, max) => {
@@ -129,15 +164,29 @@
         };
       </code>
     </pre>
+    <p>В свойстве <code>exports</code> объект, который модуль экспортирует, и который будет доступен при подключении.</p>
   </section>
   <section class="slide">
-    <h2>Используем наш модуль</h2>
-    <p>
-      Укажем путь к модулю в <code>require</code> относительно нашего файла <code>lib/number.js</code>. Так как они в одной папке, то просто <code>./random</code>. Расширения <code>.js</code>, <code>.json</code> и <code>.node</code> можно опустить
-    </p>
+    <h2>Использование модуля</h2>
+    <p>Создадим файл <code>index.js</code>, который будет использовать нашу функции генерации случайных чисел:</p>
     <pre>
       <code class="language-javascript line-numbers">
-        const random = require('./random');
+        let numbers = [];
+        for (let i = 0; i < 5; ++i) {
+          let number = random(1, 100);
+          numbers.push(number);
+        }
+        console.log(numbers);
+      </code>
+    </pre>
+    <p>Сейчас этот код выдает ошибку: <mark class="impotant">ReferenceError: random is not defined</mark></p>
+  </section>
+  <section class="slide">
+    <h2>Подключим модуль и определим <code>random</code></h2>
+    <p>Для подключения модуля используется функция <code>require</code>. Она принимает путь к файлу модуля и возвращает объект <code>module.exports</code> этого модуля.</p>
+    <pre>
+      <code class="language-javascript line-numbers">
+        <mark>const random = require('./random');</mark>
         let numbers = [];
         for (let i = 0; i < 5; ++i) {
           let number = random(1, 100);
@@ -146,6 +195,7 @@
         console.log(numbers); // <mark>[ 33, 7, 23, 11, 95 ]</mark>
       </code>
     </pre>
+    <p>Укажем относительный путь к модулю в <code>require</code>. Расширения <code>.js</code>, <code>.json</code> и <code>.node</code> можно опустить</p>
   </section>
   <section class="slide">
     <h2>Подключенный модуль можно использовать не лету</h2>
@@ -162,9 +212,7 @@
   </section>
   <section class="slide">
     <h2>Подключаемые модули кэшируются</h2>
-    <p>
-      Файл <code>lib/number.js</code>
-    </p>
+    <p>Файл <code>number.js</code></p>
     <pre>
       <code class="language-javascript line-numbers">
         const random = require('./random');
@@ -172,24 +220,34 @@
       </code>
     </pre>
 
-    <p>
-      Файл <code>main.js</code>
-    </p>
+    <p>Файл <code>main.js</code></p>
     <pre>
       <code class="language-javascript line-numbers">
-        const num1 = require('./lib/number');
-        const num2 = require('./lib/number');
-        const num3 = require('./lib/number');
+        const num1 = require('./number');
+        const num2 = require('./number');
+        const num3 = require('./number');
 
         console.log(num1, num2, num3); // <mark class="important">77, 77, 77</mark>
       </code>
     </pre>
   </section>
   <section class="slide">
+    <h2>Сброс кеша</h2>
+    <p>Есть возможность сбросить кэш:</p>
+    <pre>
+      <code class="language-javascript line-numbers">
+        const num1 = require('./number');
+        delete require.cache[require.resolve('./number')];
+        const num2 = require('./number');
+
+        console.log(num1, num2); // <mark class="important">48 53</mark>
+      </code>
+    </pre>
+    <p>Но это имеет смысл делать только при особой необходимости. Обычно кеширование дает больше плюсов.</p>
+  </section>
+  <section class="slide">
     <h2>Экспорт нескольких сущностей</h2>
-    <p>
-      Допустим мы хотим создать функции фильтров для массивов в <code>filters.js</code>
-    </p>
+    <p>Допустим мы хотим создать функции фильтров для массивов в <code>filters.js</code></p>
     <pre>
       <code class="language-javascript line-numbers">
         const odd = number => number % 2;
@@ -204,9 +262,7 @@
   </section>
   <section class="slide">
     <h2>Используем наши фильтры</h2>
-    <p>
-      Можно подключить весь модуль
-    </p>
+    <p>Можно подключить весь модуль</p>
     <pre>
       <code class="language-javascript line-numbers">
         const filters = require('./filters');
@@ -214,14 +270,20 @@
         console.log(odd); // <mark>[ 1, 3, 5 ]</mark>
       </code>
     </pre>
-    <p>
-      А можно присвоить только нужные свойства
-    </p>
+    <p>А можно присвоить только нужные свойства</p>
     <pre>
       <code class="language-javascript line-numbers">
         const oddFilter = <mark>require('./filters').odd</mark>;
         const odd = [1, 2, 3, 4, 5, 6].filter(oddFilter);
         console.log(odd); // <mark>[ 1, 3, 5 ]</mark>
+      </code>
+    </pre>
+    <p>Или так</p>
+    <pre>
+      <code class="language-javascript line-numbers">
+        const { even } = require('./filters');
+        const evenNumbers = [1, 2, 3, 4, 5, 6].filter(even);
+        console.log(evenNumbers); // <mark>[ 2, 4, 6 ]</mark>
       </code>
     </pre>
   </section>
@@ -289,6 +351,7 @@
   </section>
   <section class="slide">
     <h2>Переменные объявленные в модуле не доступны при подключении</h2>
+    <p>Создадим файл <code>private.js</code>:</p>
     <pre>
       <code class="language-javascript line-numbers" data-file="private.js">
         let number = 0;
@@ -297,9 +360,7 @@
       </code>
     </pre>
 
-    <p>
-      Не экспортированные переменные становятся «приватными»:
-    </p>
+    <p>Не экспортированные переменные становятся «приватными»:</p>
     <pre>
       <code class="language-javascript line-numbers" data-file="main.js">
         const value = require('./private');
@@ -310,13 +371,50 @@
     </pre>
   </section>
   <section class="slide">
+    <h2>Подключаем модуль который ничего не экспортирует</h2>
+    <p>Модуль <code>info.js</code>:</p>
+    <pre>
+      <code class="language-javascript line-numbers">
+        console.log('Информация о приложении');
+      </code>
+    </pre>
+    <p>Наше приложение <code>app.js</code>:</p>
+    <pre>
+      <code class="language-javascript line-numbers">
+        if (!process.argv[3]) {
+          require('./info');
+        }
+      </code>
+    </pre>
+    <p>Ошибок не выдается. Сама функция <code>require</code> вернет пустой объект <code>{}</code>. Но код модуля выполнится.</p>
+    <p><code>process</code> — еще один глобальный объект, содержит информацию о текущем запущенном процессе. <code>process.argv</code> — аргументы этого процесса.</p>
+  </section>
+  <section class="slide">
+    <h2>Подключение JSON-файлов</h2>
+    <p>Создадим файл <code>number-list.json</code>:</p>
+    <pre>
+      <code class="language-json line-numbers">
+        [0, 1, 2, 3, 4, 5, 6, 7, 8]
+      </code>
+    </pre>
+    <p>И используем эти данные в нашем коде с фильтрами:</p>
+    <pre>
+      <code class="language-javascript line-numbers">
+        const { even } = require('./filters');
+        const numbers = require('./number-list');
+        const evenNumbers = numbers.filter(even);
+        console.log(evenNumbers); // <mark>[ 0, 2, 4, 6, 8 ]</mark>
+      </code>
+    </pre>
+    <p>При подключении <code>.json</code> файла создается JavaScript-объект содержащий данные из файла. Преобразовывать ничего не нужно.</p>
+  </section>
+  <section class="slide">
     <h2>Итого про <code>require</code></h2>
     <ul>
-      <li>Для подключения модуля ядра используйте <code>require</code> и его имя в качестве параметра.</li>
       <li>Для подключения собственного модуля <code>require</code> и путь к файлу модуля.</li>
       <li>Расширения файла <code>.js</code>, <code>.json</code> и <code>.node</code> можно опускать.</li>
       <li>Подключенный модуль можно использовать на лету, или получить из него только нужные свойства и методы.</li>
-      <li>Можно подключать модули, которые ничего не экспортируют. Получим пустой объект.</li>
+      <li>Можно подключать модули, которые ничего не экспортируют. Получим пустой объект. Но код модуля выполнится. Иногда это все что нам нужно.</li>
     </ul>
   </section>
   <section class="slide">
@@ -329,24 +427,170 @@
     </ul>
   </section>
 
-  <section class="slide chapter" id="readfile">
-    <h2>Чтение файлов с помощью <code>readFile</code></h2>
+  <section class="slide chapter" id="require">
+    <h2>Системные модули</h2>
   </section>
   <section class="slide">
-    <h2>Метод <code>readFile</code> ассинхронный</h2>
-    <p>
-      Это означает что система не будет ожидать завершения операции, и продолжит работу.
-    </p>
+    <h2>Для подключения тоже используем <code>require</code></h2>
+    <p>Главное отличие, в <code>require</code> мы передаем не путь, а название системного модуля.</p>
     <pre>
       <code class="language-javascript line-numbers">
         const fs = require('fs');
+
+        content = fs.readFileSync('data.txt');
+        console.log(content);
+      </code>
+    </pre>
+    <p>Например, весь функционал взаимодействия с файловой системой реализован в модуле <code>fs</code>, и чтобы его использовать нам нужно его подключить.</p>
+  </section>
+  <section class="slide">
+    <h2>Мы можем присвоить модуль в любую переменную</h2>
+    <p>Функция <code>require</code> по сути возвращает то что является модулем. Это не обязательно объект. И мы присваиваем результат в переменную, или можем его тут же использовать:</p>
+    <pre>
+      <code class="language-javascript line-numbers">
+        const <mark>fileSystem</mark> = require('fs');
+
+        content = fs.readFileSync('data.txt');
+        console.log(content);
+      </code>
+    </pre>
+  </section>
+
+  <section class="slide chapter" id="async">
+    <h2>Асинхронные функции</h2>
+  </section>
+  <section class="slide">
+    <h2>Асинхронные функции — основа Node.js</h2>
+    <ul>
+      <li>Такая функция выполняется сразу.</li>
+      <li>Но для получения результата требуется какое-то время.</li>
+      <li>Поэтому после выполнения функции результат еще не доступен.</li>
+      <li>Поэтому в такую функцию мы передаем нашу функцию, которая обычно называется функцией обратного вызова, или колбэком.</li>
+      <li>Когда результат будет готов, система вызовет наш колбэк, и передаст в него результат.</li>
+    </ul>
+  </section>
+  <section class="slide">
+    <h2>Пример асинхронной функции — <code>setTimeout</code></h2>
+    <pre>
+      <code class="language-javascript line-numbers">
+        setTimeout(() => {
+          console.log('Прошло 5 секунд');
+        }, 5000);
+        console.log('Система не ожидает 5 секунд');
+        console.log('Она продолжает выполнять код программы дальше');
+        console.log('Когда 5 секунд пройдет, она вызовет нашу функцию');
+      </code>
+    </pre>
+    <p>Результат выполнения:</p>
+    <pre>
+      <code class="language-markup">
+        $ node timeout
+        Система не ожидает 5 секунд
+        Она продолжает выполнять код программы дальше
+        Когда 5 секунд пройдет, она вызовет нашу функцию
+        Прошло 5 секунд
+      </code>
+    </pre>
+  </section>
+  <section class="slide">
+    <h2>Имитируем длительное получение данных с помощью <code>setTimeout</code></h2>
+    <pre>
+      <code class="language-javascript line-numbers">
+        function getData(callback) {
+          setTimeout(() => {
+            let numbers = require('number-list');
+            callback(null, numbers);
+          }, 1500);
+        }
+        const { even } = require('./filters');
+        getData((error, numbers) => {
+          if (error) throw error;
+          const evenNumbers = numbers.filter(even);
+          console.log(evenNumbers); // <mark>[ 0, 2, 4, 6, 8 ]</mark>
+        });
+      </code>
+    </pre>
+  </section>
+  <section class="slide">
+    <h2>Разберем получившийся пример</h2>
+    <ul>
+      <li><code>getData</code> не возвращает данные, потому что иначе код подвис на полторы секунды.</li>
+      <li>Когда данные «готовы» вызывается переданная функция <code>callback</code>.</li>
+      <li>Стандартный паттер организации асинхронного кода с функциями обратного вызова: первым аргументом передается ошибка, а остальные уже данные. Если ошибок нет, передаётся <code>null</code> или <code>false</code>.</li>
+      <li>Мы не можем обработать числа сразу. Нам нужно дождаться их получения.</li>
+      <li>Поэтому весь наш код в колбэке.</li>
+    </ul>
+  </section>
+
+  <section class="slide chapter">
+    <h2>Паттерн «ошибка + результат»</h2>
+  </section>
+  <section class="slide">
+    <h2>Исход длительной операции — ошибка</h2>
+    <p>Любой длительный процесс может завершиться либо с ошибкой, либо успешно. В случае когда ожидание завершилось ошибкой, нам нужно передать информациб об ошибке:</p>
+    <pre>
+      <code class="language-javascript line-numbers">
+        function getData(callback) {
+          setTimeout(() => {
+            callback(<mark>{
+              code: 500,
+              message: 'Сервер не доступен'
+            }</mark>);
+          }, 1500);
+        }
+      </code>
+    </pre>
+  </section>
+  <section class="slide">
+    <h2>Исход длительной операции — успех</h2>
+    <p>В случае когда ожидание завершилось успешно, нам нужно передать данные:</p>
+    <pre>
+      <code class="language-javascript line-numbers">
+        function getData(callback) {
+          setTimeout(() => {
+            let numbers = require('number-list');
+            callback(<mark>null, numbers</mark>);
+          }, 1500);
+        }
+      </code>
+    </pre>
+  </section>
+  <section class="slide">
+    <h2>Аргументы функции обратного вызова</h2>
+    <p>Для того чтобы передача информации о состоянии и результат длительной операции были однообразны, используют такой подход:</p>
+    <ul>
+      <li>Первым аргументом передают информацию об ошибке, либо <code>null</code>, если ошибки нет.</li>
+      <li>Втором и последующими аргументами передают результат. Который имеет смысл, если ошибки не случилось.</li>
+    </ul>
+    <p>Поэтому, при таком подходе легко реализовать код функции обратного вызова, просто понимая что мы ждем массив чисел:</p>
+    <pre>
+      <code class="language-javascript line-numbers">
+        getData((error, numbers) => {
+          if (error) throw error;
+          const evenNumbers = numbers.filter(even);
+          console.log(evenNumbers); // <mark>[ 0, 2, 4, 6, 8 ]</mark>
+        });
+      </code>
+    </pre>
+  </section>
+
+  <section class="slide chapter" id="readfile">
+    <h2>Работа с файлами</h2>
+  </section>
+  <section class="slide">
+    <h2>Метод <code>readFile</code> ассинхронный</h2>
+    <p>Это означает что система не будет ожидать завершения операции, и продолжит работу.</p>
+    <pre>
+      <code class="language-javascript line-numbers">
+        const fs = require('fs');
+        const conf = { encoding: 'utf8' };
         console.log('Читаем из файла …');
-        fs.readFile('./hello.txt', { encoding: 'utf8' }, (err, content) => {
+        fs.readFile('./hello.txt', conf, (err, content) => {
           if(err) return console.error(err);
           console.log('Содержимое файла:');
           console.log(content);
         });
-        console.log('Чтение файла завершено!');
+        console.log('Файл прочитан и содержимое выведено!');
       </code>
     </pre>
   </section>
@@ -356,7 +600,7 @@
       <code class="language-markup">
         > node readfile.js
         Читаем из файла …
-        <mark class="important">Чтение файла завершено!</mark>
+        <mark class="important">Файл прочитан и содержимое выведено!</mark>
         Содержимое файла:
         Привет, Мир!
       </code>
@@ -366,12 +610,29 @@
     </p>
   </section>
   <section class="slide">
+    <h2>Метод <code>readFile</code> ассинхронный</h2>
+    <p>Поэтому, если мы хотим выполнить какое-то действие, после выполнения асинхронной функции, то это действие нужно делать в функции обратного вызова.</p>
+    <pre>
+      <code class="language-javascript line-numbers">
+        const fs = require('fs');
+        const conf = { encoding: 'utf8' };
+        console.log('Читаем из файла …');
+        fs.readFile('./hello.txt', conf, (err, content) => {
+          if(err) return console.error(err);
+          console.log('Содержимое файла:');
+          console.log(content);
+          <mark>console.log('Файл прочитан и содержимое выведено!');</mark>
+        });
+      </code>
+    </pre>
+  </section>
+  <section class="slide">
     <h2>Получаем список файлов в папке</h2>
     <pre>
       <code class="language-javascript line-numbers">
         const fs = require('fs');
 
-        fs.readdir('./', function(err, files) {
+        fs.readdir('./', (err, files) => {
           if(err) return console.error(err);
           files.forEach(file => console.log(file));
         });
@@ -379,12 +640,12 @@
     </pre>
   </section>
   <section class="slide">
-    <h2>Проверим права на запись в файл</h2>
+    <h2>Проверим права на запись в файле</h2>
     <pre>
       <code class="language-javascript line-numbers">
         const fs = require('fs'), path = 'hello.txt';
 
-        fs.access(path, fs.constants.W_OK, function(err) {
+        fs.access(path, fs.constants.W_OK, err => {
           if (err) return console.log('нет прав на запись %s', path);
           console.log('есть права на запись %s', path);
         });
@@ -398,6 +659,124 @@
     </ol>
   </section>
 
+  <section class="slide">
+    <h2>Записываем данные в файл</h2>
+    <pre>
+      <code class="language-javascript line-numbers">
+        const fs = require('fs');
+        const text = 'Привет, Нетология!';
+        fs.writeFile('./hello.txt', text, err => {
+          if (err) throw err;
+          console.log('Файл сохранен');
+        });
+      </code>
+    </pre>
+  </section>
+
+  <section class="slide">
+    <h2>Создаем папку</h2>
+    <pre>
+      <code class="language-javascript line-numbers">
+        const fs = require('fs')
+        const name = './neto';
+        fs.mkdir(name, err => {
+          if (err) throw err;
+          console.log('Папка создана');
+        });
+      </code>
+    </pre>
+  </section>
+
+  <section class="slide">
+    <h2>Переименуем файл</h2>
+    <pre>
+      <code class="language-javascript line-numbers">
+        const fs = require('fs');
+        fs.rename('./hello.txt', './hw.txt', err => {
+          if (err) throw err;
+          console.log('Файл переименован');
+        });
+      </code>
+    </pre>
+    <p>Аналогично можно переименовать или переместить файл или папку.</p>
+  </section>
+
+  <section class="slide">
+    <h2>Допишем данные в файл</h2>
+    <pre>
+      <code class="language-javascript line-numbers">
+        const fs = require('fs');
+        const conf = { encoding: 'utf8' };
+        const text = 'Новые данные';
+        fs.appendFile('./hw.txt', text, conf, err => {
+          if (err) throw err;
+          console.log('Файл дополнен');
+        })
+      </code>
+    </pre>
+  </section>
+
+  <section class="slide chapter">
+    <h2>Последовательность асинхронных вызывов</h2>
+  </section>
+
+  <section class="slide">
+    <h2>Параллельное выполнение независимых операций</h2>
+    <p>Нет никакой гарантии что файлы будут созданы в том порядке, как был вызван метод <code>writeFile</code></p>
+    <pre>
+      <code class="language-javascript line-numbers">
+        const fs = require('fs');
+        const names = ['Иван', 'Олег', 'Екатерина'];
+        names.forEach((name, i) => {
+          fs.writeFile(`./name${i}.txt`, name, err => {
+            if (err) throw err;
+            console.log(`Файл name${i}.txt сохранен`);
+          });
+        });
+      </code>
+    </pre>
+  </section>
+
+  <section class="slide">
+    <h2>Последовательное выполнение зависимых операций</h2>
+    <p>Что если нам сначала нужно создать папку, а потом создать файл в ней?</p>
+    <pre>
+      <code class="language-javascript line-numbers">
+        const fs = require('fs'), opts = { encoding: 'utf8' };
+        fs.mkdir('./data', err => {
+          if (err) throw err;
+          console.log('Папка создана!');
+        });
+        fs.writeFile('./data/test.txt', 'Привет!', opts, err => {
+          if (err) throw err;
+          console.log('Файл создан!');
+        });
+      </code>
+    </pre>
+    <p>Если мы просто последовательно вызовем <code>mkdir</code> и <code>writeFile</code>, нет никаких гарантий что файл создастся после того как будет создана папка. Он может быть создан и раньше. И это приведет к ошибке.</p>
+  </section>
+
+  <section class="slide">
+    <h2>Выполнять зависимое действие нужно в колбеке</h2>
+    <pre>
+      <code class="language-javascript line-numbers">
+        const fs = require('fs'), opts = { encoding: 'utf8' };
+        fs.mkdir('./data', err => {
+          if (err) throw err;
+          console.log('Папка создана!');
+          fs.writeFile('./data/test.txt', 'Привет!', opts, err => {
+            if (err) throw err;
+            console.log('Файл создан!');
+          });
+        });
+      </code>
+    </pre>
+    <p>А это приводит к огромной вложенности функций обратного вызова. И абсолютно не читаемому коду.</p>
+  </section>
+
+  <section class="slide chapter">
+    <h2>Техники борьбы с колбэк-адом</h2>
+  </section>
 
   <section class="slide last">
     <p class="thanx">Задавайте вопросы и напишите отзыв о лекции!</p>

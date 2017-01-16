@@ -1,0 +1,17 @@
+{
+  "name": "npm-test",
+  "version": "1.0.0",
+  "main": "app.js",
+  "author": "",
+  "license": "ISC",
+  "scripts": {
+    "test": "npm run hw && npm run start",
+    "start": "nodemon .",
+    "hw": "echo 'Hello World!'"
+  },
+  "description": "",
+  "dependencies": {
+    "request": "^2.74.0",
+    "twitter": "^1.4.0"
+  }
+}

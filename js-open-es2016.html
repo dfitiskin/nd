@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <title>ES2015 в Node.js</title>
+  <title>JavaScript: что нового появилось в языке за последние годы</title>
   <meta charset="utf-8">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -12,12 +12,12 @@
 </head>
 <body class="shower list">
   <header class="caption">
-    <h1>ES2015 в Node.js</h1>
+    <h1>JavaScript: что нового появилось в языке за последние годы</h1>
     <p>Дмитрий Фитискин, Нетология</p>
   </header>
 
   <section class="slide" id="cover">
-    <h2>EcmaScript 2015 в&nbsp;Node.js</h2>
+    <h2>JavaScript: что нового появилось в языке за последние годы</h2>
     <p>
       <img src="i/dfitiskin.jpg" alt="" class="avatar">
       Дмитрий Фитискин <span class="position">Нетология</span>
@@ -34,60 +34,6 @@
     </ul>
   </section>
 
-  <section class="slide chapter">
-    <h2>Предисловие</h2>
-  </section>
-  <section class="slide" id="intro">
-    <h2>Что такое Node.js</h2>
-    <ul>
-      <li>Платформа основанная на движке <a href="https://ru.wikipedia.org/wiki/V8_(движок_JavaScript)">V8</a> транслирующая JavaScript в машинный код.</li>
-      <li>Добавляет языку доступ устройствам ввода-вывода через специальное API написанное на языке C++.</li>
-      <li>Что делает JavaScript языком общего назначения.</li>
-      <li>Целью Node является предложить простой способ построения масштабируемых сетевых серверов.</li>
-      <li>Вместо многопоточности представляет собой событийно-ориентированную систему.</li>
-    </ul>
-  </section>
-  <section class="slide" id="install-win">
-    <h2>Установка Node.js</h2>
-    <ol>
-      <li>Скачать дистрибутив под свою платформу с сайта <a href="https://nodejs.org/en/download/">nodejs.org</a>.</li>
-      <li><mark>Windows installer (.msi)</mark> — установщик под Windows.</li>
-      <li><mark>Mac OS X Installer (.pkg)</mark> — установщик под OSX.</li>
-      <li>Есть и другие версии под разные платформы.</li>
-      <li>Под Win и OSX следуйте по шагам установщика.</li>
-    </ol>
-  </section>
-  <section class="slide" id="first-run">
-    <h2>Запуск Node.js</h2>
-    <ul>
-      <li>Node.js доступен в терминале или в командной строке.</li>
-      <li><code>node -v</code> — команда покажет версию Node.js.</li>
-      <li><code>node -i</code> — запуск интерактивной консоли.</li>
-      <li><code>node test.js</code> — выполнение кода из файла <code>test.js</code> расположенного в текущей папке.</li>
-    </ul>
-  </section>
-  <section class="slide" id="editor">
-    <h2>Выбор редактора</h2>
-    <figure>
-      <img src="//github-atom-io-herokuapp-com.global.ssl.fastly.net/assets/screenshot-main@2x-f5f56d18fa8896b3d987d24fc903d03f.png">
-      <figcaption>
-        Если вы еще не выбрали редактор — рекомендую <a href="https://atom.io">Atom</a>
-      </figcaption>
-    </figure>
-  </section>
-  <section class="slide" id="git">
-    <h2>Рекомендую использовать <a href="https://git-scm.com/">git</a> для контроля версий кода</h2>
-    <ul>
-      <li>Создать локально отдельный репозиторий для каждой домашней работы по проекту <code>git&nbsp;init</code>.</li>
-      <li>Фиксировать важные изменение по ходу работы добавив измененные файлы <code>git&nbsp;add</code> и зафиксировав версию <code>git&nbsp;commit</code>.</li>
-      <li>Опубликать локальный репозиторий на <a href="https://github.com/">GitHub</a> или <a href="https://bitbucket.org/">BitBucket</a> <code>git&nbsp;remote&nbsp;add</code></li>
-      <li>Опубликовать текущее состояние локального репозитория <code>git&nbsp;push</code>.</li>
-    </ul>
-  </section>
-
-  <section class="slide chapter">
-    <h2>План занятия</h2>
-  </section>
   <section class="slide" id="roadmap">
     <h2>План занятия</h2>
     <ol class="double">
@@ -104,6 +50,290 @@
       <li><a href="#templates">Строковые шаблоны</a></li>
       <li><a href="#for-of">Цикл <code>for … of</code></a></li>
     </ol>
+  </section>
+
+  <section class="slide chapter">
+    <h2>Угадай JavaScript</h2>
+  </section>
+
+  <section class="slide">
+    <h2>Это JavaScript?</h2>
+    <pre>
+      <code class="language-java line-numbers">
+        class HelloWorldApp {
+          public static void main(String[] args) {
+            System.out.println("Hello world!");
+          }
+        }
+      </code>
+    </pre>
+    <p>Это JavaScript? <code>+</code> — да, <code>-</code> — нет.</p>
+  </section>
+
+  <section class="slide">
+    <h2>Java</h2>
+    <p>Выдает строгое указание типов результата <code>void</code> и аргументов <code>String[]</code></p>
+    <p>Ошибочно считают что Java это старший брат JavaScript. В этом виноваты маркетологи.</p>
+    <pre>
+      <code class="language-java line-numbers">
+        class HelloWorldApp {
+          public static void main(String[] args) {
+            System.out.println("Hello world!");
+          }
+        }
+      </code>
+    </pre>
+    <img class="place top right" style="margin: 20px 50px 0 0" src="./pic/java.png" alt="Java" height="200px">
+  </section>
+
+  <section class="slide">
+    <h2>Это JavaScript?</h2>
+    <pre>
+      <code class="language-php line-numbers">
+        class HelloWorldApp
+        {
+          static public function show() {
+            echo 'Hello world!';
+          }
+        }
+      </code>
+    </pre>
+    <p>Это JavaScript? <code>+</code> — да, <code>-</code> — нет.</p>
+  </section>
+
+  <section class="slide">
+    <h2>PHP</h2>
+    <p>Обычно его сразу выдают переменные, которые всегда начинаются с символа <code>$</code>. А тут легко выдает команда <code>echo</code>.</p>
+    <pre>
+      <code class="language-php line-numbers">
+        class HelloWorldApp
+        {
+          static public function show() {
+            echo 'Hello world!';
+          }
+        }
+      </code>
+    </pre>
+    <img class="place top right" style="margin: 50px 90px 0 0" src="./pic/php.png" alt="Java" height="100px">
+  </section>
+
+  <section class="slide">
+    <h2>Это JavaScript?</h2>
+    <pre>
+      <code class="language-javascript line-numbers">
+        class HelloWorldApp {
+          show() {
+            console.log('Hello world!');
+          }
+        }
+      </code>
+    </pre>
+    <p>Это JavaScript? <code>+</code> — да, <code>-</code> — нет.</p>
+  </section>
+
+  <section class="slide">
+    <h2>Это JavaScript!</h2>
+    <p>Новый синтаксисов классов очень хорош.</p>
+    <pre>
+      <code class="language-javascript line-numbers">
+        class HelloWorldApp {
+          show() {
+            console.log('Hello world!');
+          }
+        }
+      </code>
+    </pre>
+    <p>Особенно после старого:</p>
+    <pre>
+      <code class="language-javascript line-numbers">
+        function HelloWorldApp() {}
+        HelloWorldApp.prototype.show = function () {
+          console.log('Hello world!');
+        };
+      </code>
+    </pre>
+    <img class="place top right" style="margin: 0px -40px 0 0" src="./pic/js.png" alt="Java" height="200px">
+  </section>
+
+  <section class="slide chapter">
+    <h2>ECMAScript</h2>
+  </section>
+
+  <section class="slide chapter">
+    <h2>ES2016</h2>
+  </section>
+
+  <section class="slide">
+    <h2>Оператор возведения в степень</h2>
+    <p>Теперь для того чтобы возводить в степень не нужно использовать <code>Math</code>:</p>
+    <pre>
+      <code class="language-javascript line-numbers">
+        var megabite = 2 ** 20;
+        console.log(megabite);
+        // <mark>1048576</mark>
+      </code>
+    </pre>
+    <p>Ранее это можно было сделать только так:</p>
+    <pre>
+      <code class="language-javascript line-numbers">
+        var megabite = Math.pow(2, 20);
+        console.log(megabite);
+        // <mark>1048576</mark>
+      </code>
+    </pre>
+    <p>Не сказать что сильно неудобно было.</p>
+  </section>
+
+  <section class="slide">
+    <h2>Содержит ли массив то что нужно</h2>
+    <p>Появился метод массива <code>Array.prototype.includes()</code>, проверяющий что переданное значение есть в массиве:</p>
+    <pre>
+      <code class="language-javascript line-numbers">
+        var whitelist = ['Олег', 'Илья', 'Маша', 'Таня'];
+        function faceControl(name) {
+          if (whitelist.includes(name)) {
+            console.log(name, 'добро пожаловать!');
+          } else {
+            console.log('Посторонним вход воспрещен!');
+          }
+        }
+        faceControl('Ашот');
+        faceControl('Маша');
+      </code>
+    </pre>
+  </section>
+
+  <section class="slide">
+    <h2><code>includes</code> своими руками</h2>
+    <p>Метод <code>indexOf</code> раньше тоже отлично решал эту задачу:</p>
+    <pre>
+      <code class="language-javascript line-numbers">
+        var whitelist = ['Олег', 'Илья', 'Маша', 'Таня'];
+        function faceControl(name) {
+          if (whitelist.indexOf(name) !== -1) {
+            console.log(name, 'добро пожаловать!');
+          } else {
+            console.log('Посторонним вход воспрещен!');
+          }
+        }
+        faceControl('Ашот');
+        faceControl('Маша');
+      </code>
+    </pre>
+    <p>Но не так красиво. И все путались с <code>-1</code>.</p>
+  </section>
+
+  <section class="slide chapter">
+    <h2>ES2015</h2>
+  </section>
+
+  <section class="slide">
+    <h2>Поиск элемента в массиве</h2>
+    <p>Добавлены методы <code>Array.prototype.find</code> и <code>Array.prototype.findIndex</code>. Например, ищем число кратное <code>3</code>. <code>find</code> вернте само число:</p>
+    <pre>
+      <code class="language-javascript line-numbers">
+        var numbers = [1, 2, 3, 4, 5, 6];
+        var result = numbers.find(function (num) {
+          return num % 3 === 0;
+        });
+        console.log(result); // <mark>3</mark>
+      </code>
+    </pre>
+    <p><code>findIndex</code> вернет его индекс.</p>
+  </section>
+
+  <section class="slide">
+    <h2>Заполнение массива</h2>
+    <p>Добавлены метод <code>Array.prototype.fill</code>, который заполняет элементы массива указанным значением:</p>
+    <pre>
+      <code class="language-javascript line-numbers">
+        var numbers = [1, 2, 3, 4, 5, 6];
+        numbers.fill(99);
+        console.log(numbers); // <mark>[ 99, 99, 99, 99, 99, 99 ]</mark>
+      </code>
+    </pre>
+    <p>Есть возможность заполнить значениями в диапазоне от и до:</p>
+    <pre>
+      <code class="language-javascript line-numbers">
+        var numbers = [1, 2, 3, 4, 5, 6];
+        numbers.fill(99, 2, 5);
+        console.log(numbers); // <mark>[ 1, 2, 99, 99, 99, 6 ]</mark>
+      </code>
+    </pre>
+    <p>Удобно для пустых массивов:</p>
+    <pre>
+      <code class="language-javascript line-numbers">
+        var tests = new Array(5).fill(false);
+        console.log(tests); // <mark>[ false, false, false, false, false ]</mark>
+      </code>
+    </pre>
+  </section>
+
+  <section class="slide">
+    <h2>С прототипом массива что-то не так</h2>
+    <p>Попытка создать массив из одного числа приводит к страным результатам:</p>
+    <pre>
+      <code class="language-javascript line-numbers">
+        var numbers = new Array(4, 7, 92);
+        console.log(numbers); // <mark>[ 4, 7, 92 ]</mark>
+
+        var number = new Array(4);
+        console.log(number); // <mark>[ , , ,  ]</mark>
+      </code>
+    </pre>
+    <p>Появилась функция <code>Array.of</code>, которая как мне кажется создана чтобы решить эту проблему:</p>
+    <pre>
+      <code class="language-javascript line-numbers">
+        var numbers = Array.of(4, 7, 92);
+        console.log(numbers); // <mark>[ 4, 7, 92 ]</mark>
+
+        var number = Array.of(4);
+        console.log(number); // <mark>[ 4 ]</mark>
+      </code>
+    </pre>
+  </section>
+
+  <section class="slide">
+    <h2>Создание массива из псевдо-массива</h2>
+    <p>Только в JavaScript есть понятие псевдо-массив. Например, <code>arguments</code> внутри функции. Или любая коллекция узлов:</p>
+    <pre>
+      <code class="language-javascript line-numbers">
+        function getTotal() {
+          return Array.from(arguments).reduce(function (result, item) {
+            return result + item;
+          });
+        }
+        var total = getTotal(50, 299, 14, 73);
+        console.log(total); // <mark>436</mark>
+      </code>
+    </pre>
+    <p>Ранее мы «одалживали» <code>slice</code> у прототипа массива:</p>
+    <pre>
+      <code class="language-javascript line-numbers">
+        var args = Array.prototype.slice.call(arguments);
+        return args.reduce(function (result, item) {
+          return result + item;
+        });
+      </code>
+    </pre>
+  </section>
+
+  <section class="slide">
+    <h2>Клонирование объекта</h2>
+    <p>Появилась функция <code>Object.assign</code>, которая позволяет скопировать все свойства из исходного объекта в новый:</p>
+    <pre>
+      <code class="language-javascript line-numbers">
+        var ivan = {
+          name: 'Иван',
+          age: 77
+        }
+
+        var oleg = Object.assign({}, ivan);
+        oleg.name = 'Олег';
+        console.log(ivan.name, oleg.name);
+        // <mark>Иван Олег</mark>
+      </code>
+    </pre>
   </section>
 
   <section class="slide chapter" id="var">
@@ -132,7 +362,32 @@
         }
 
         test();
-        console.log(name); // <mark>undefined</mark>
+        console.log(name);
+        // <mark class="important">ReferenceError: name is not defined</mark>
+      </code>
+    </pre>
+    <p>Обращение к переменной, которая не определена приведет к ошибке.</p>
+  </section>
+  <section class="slide">
+    <h2>Режим строго соответствия ES5</h2>
+    <p>Появился в 2009 году. Добавьте в начале файла строку <code>'use strict'</code>:</p>
+    <pre>
+      <code class="language-javascript line-numbers">
+        <mark>'use strict';</mark>
+        name = 'Иван';
+        //<mark class="important">ReferenceError: name is not defined</mark>
+      </code>
+    </pre>
+    <p>Если дорабатываете легаси-код, добавляйте <code>'use strict'</code> первой строкой в переработанные функции:</p>
+    <pre>
+      <code class="language-javascript line-numbers">
+        function doIt() {
+          <mark>'use strict';</mark>
+          name = 'Иван';
+        }
+        age = 99;
+        doIt();
+        //<mark class="important">ReferenceError: name is not defined</mark>
       </code>
     </pre>
   </section>
@@ -162,7 +417,7 @@
     </pre>
   </section>
   <section class="slide">
-    <h2>Типичная ошибка с замыканиями</h2>
+    <h2>Замыкания</h2>
     <pre>
       <code class="language-javascript line-numbers">
         var imax = 4, i;
@@ -173,6 +428,7 @@
         }
       </code>
     </pre>
+    <p>Что мы получим в результате выполнения этого кода?</p>
   </section>
   <section class="slide">
     <h2>Ожидаемый результат</h2>
@@ -226,7 +482,7 @@
     </pre>
   </section>
   <section class="slide">
-    <h2>Вариант ES5: функция созданная и вызванная на лету</h2>
+    <h2>Вариант ES5: функция созданная и вызванная на лету (IIFE)</h2>
     <pre>
       <code class="language-javascript line-numbers">
         var imax = 4, i;
@@ -246,7 +502,7 @@
     <pre>
       <code class="language-javascript line-numbers">
         var imax = 4, i;
-        for (var i = 0; i < imax; i++) {
+        for (<mark>let</mark> i = 0; i < imax; i++) {
           let timer = i + 1;
           setTimeout(function () {
             console.log('Timeout %d finished', timer);
@@ -317,9 +573,11 @@
   </section>
   <section class="slide">
     <h2>Объявления переменных не всплывают</h2>
+    <p>Переменная до строки в которой она объявлена находится в TDZ (временная мертвая зона)</p>
     <pre>
       <code class="language-javascript line-numbers">
-        console.log(name); // <mark class="important">ReferenceError: name is not defined</mark>
+        console.log(name);
+        // <mark class="important">ReferenceError: name is not defined</mark>
         let name = 'Иван';
       </code>
     </pre>
@@ -367,7 +625,8 @@
     <pre>
       <code class="language-javascript line-numbers">
         const name = 'Дима';
-        name = 'Ольга'; // <mark class="important">TypeError: Assignment to constant variable.</mark>
+        name = 'Ольга';
+        // <mark class="important">TypeError: Assignment to constant variable.</mark>
       </code>
     </pre>
     <p>
@@ -382,7 +641,8 @@
         names.push('Ольга');
         names.shift();
         names[1] = 'Рустэм';
-        console.log(names.join(', ')); // <mark>Олег, Рустэм, Ольга</mark>
+        console.log(names.join(', '));
+        // <mark>Олег, Рустэм, Ольга</mark>
       </code>
     </pre>
     <p>
@@ -394,7 +654,8 @@
     <pre>
       <code class="language-javascript line-numbers">
         const names = ['Дима', 'Олег', 'Роман'];
-        names = ['Джон', 'Джек', 'Бэн']; // <mark class="important">TypeError: Assignment to constant variable.</mark>
+        names = ['Джон', 'Джек', 'Бэн'];
+        // <mark class="important">TypeError: Assignment to constant variable.</mark>
       </code>
     </pre>
     <pre>
@@ -404,7 +665,8 @@
           port: 21
         }
         CONFIG.timeout = 24 * 60 * 60;
-        CONFIG = 12; // <mark class="important">TypeError: Assignment to constant variable.</mark>
+        CONFIG = 12;
+        // <mark class="important">TypeError: Assignment to constant variable.</mark>
       </code>
     </pre>
   </section>
@@ -541,7 +803,8 @@
             }, delay);
           }
         }
-        user.showNameDelay(1000); // <mark class="important">undefined</mark>
+        user.showNameDelay(1000);
+        // <mark class="important">TypeError: Cannot read property 'name' of undefined</mark>
       </code>
     </pre>
   </section>
@@ -561,6 +824,7 @@
         user.showNameDelay(1000); // <mark class="important">Иван</mark>
       </code>
     </pre>
+    <p>Еще можно использовать <code>bind</code></p>
   </section>
   <section class="slide">
     <h2>Решение ES2015: использовать фунцию-стрелку</h2>
@@ -1127,54 +1391,6 @@
       <li>Раздел <a href="https://learn.javascript.ru/es-modern">Современные возможности ES-2015</a> в учебнике на javascript.ru</li>
       <li>Статья <a href="https://github.com/metagrover/ES6-for-humans">ES6 простым человеческим языком</a> и её <a href="https://habrahabr.ru/post/305900/">перевод на хабре</a>.</li>
       <li>Серия статей <a href="https://ponyfoo.com/articles/tagged/es6-in-depth">ES6 изнутри</a> и их <a href="http://css-live.ru/?s=es6%3A&searchsubmit=U">перевод на css-live.ru</a>.</li>
-    </ul>
-  </section>
-
-  <section class="slide chapter" id="homework">
-    <h2>Домашнее задание</h2>
-  </section>
-  <section class="slide">
-    <h2>Часть 1</h2>
-    <p>
-      В задании необходимо использовать возможности ES2015 по максимуму.
-    </p>
-    <ul>
-      <li>Создать класс <code>Pokemon</code>, конструктор которого принимает имя и уровень в качестве аргумента. Все экземпляры этого класса должны иметь общий метод <code>show</code>, который выводит информацию о покемоне.</li>
-      <li>Создать класс <code>PokemonList</code>, который в качестве аргументов принимает любое количество покемонов. Экземпляры этого класса должны обладать всеми функциями массива. А так же иметь метод <code>add</code>, который принимает в качестве аргументов имя и уровень, создает нового покемона и добавляет его в список.</li>
-    </ul>
-  </section>
-  <section class="slide">
-    <h2>Часть 2</h2>
-    <ul>
-      <li>Создать два списка покемонов и сохранить их в переменных <code>lost</code> и <code>found</code>. Имена и уровни придумайте самостоятельно.</li>
-      <li>Добавить несколько новых покемонов в каждый список.</li>
-      <li>Добавить спискам покемонов метод <code>show</code>, который выводит информацию о покемонах и их общее количество в списке.</li>
-      <li>Перевести одного из покемонов из списка <code>lost</code> в список <code>found</code></li>
-    </ul>
-  </section>
-  <section class="slide">
-    <h2>На зачет с отличием</h2>
-    <ul>
-      <li>Добавить спискам покемонов метод <code>max</code>, который возвращает покемона максимального уровня.</li>
-      <li>Переопределите и используйте метод <code>valueOf</code> у покемонов, для решения этой задачи.</li>
-    </ul>
-  </section>
-  <section class="slide">
-    <h2>Как предоставить код домашней работы на проверку</h2>
-    <p>
-      Способы предоставить домашнее задание в порядке приоритета:
-    </p>
-    <ol>
-      <li>Исходный код на <a href="https://bitbucket.org/">BitBucket</a> или <a href="https://github.com/">GitHub</a></li>
-      <li>Код в песочнице <a href="http://codepen.io/">CodePen</a> или <a href="https://jsfiddle.net/">JSFiddle</a></li>
-    </ol>
-    <p>
-      Не смогу проверить и помочь если прислать:
-    </p>
-    <ul>
-      <li>Архивы, особенно RAR</li>
-      <li>Скриншоты кода</li>
-      <li>Теоретический рассказ о возникших проблемах</li>
     </ul>
   </section>
 

@@ -138,7 +138,6 @@ pre[class*="language-"] {
 
 pre[data-line] {
 	position: relative;
-	padding: 1em 0 1em 3em;
 }
 
 .line-highlight {
@@ -250,7 +249,7 @@ pre.line-numbers > code {
     content: '\240D\240A';
 }
 .token.lf:before {
-    //content: '\240A';
+    content: '\240A';
 }
 
 .token.space:before {
@@ -326,4 +325,3 @@ script[type='text/plain'].language-markup {
 .command-line-prompt > span[data-prompt]:before {
 	content: attr(data-prompt);
 }
-
