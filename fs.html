@@ -522,24 +522,75 @@
     </ul>
   </section>
 
+  <section class="slide chapter">
+    <h2>Паттерн «ошибка + результат»</h2>
+  </section>
+  <section class="slide">
+    <h2>Исход длительной операции — ошибка</h2>
+    <p>Любой длительный процесс может завершиться либо с ошибкой, либо успешно. В случае когда ожидание завершилось ошибкой, нам нужно передать информациб об ошибке:</p>
+    <pre>
+      <code class="language-javascript line-numbers">
+        function getData(callback) {
+          setTimeout(() => {
+            callback(<mark>{
+              code: 500,
+              message: 'Сервер не доступен'
+            }</mark>);
+          }, 1500);
+        }
+      </code>
+    </pre>
+  </section>
+  <section class="slide">
+    <h2>Исход длительной операции — успех</h2>
+    <p>В случае когда ожидание завершилось успешно, нам нужно передать данные:</p>
+    <pre>
+      <code class="language-javascript line-numbers">
+        function getData(callback) {
+          setTimeout(() => {
+            let numbers = require('number-list');
+            callback(<mark>null, numbers</mark>);
+          }, 1500);
+        }
+      </code>
+    </pre>
+  </section>
+  <section class="slide">
+    <h2>Аргументы функции обратного вызова</h2>
+    <p>Для того чтобы передача информации о состоянии и результат длительной операции были однообразны, используют такой подход:</p>
+    <ul>
+      <li>Первым аргументом передают информацию об ошибке, либо <code>null</code>, если ошибки нет.</li>
+      <li>Втором и последующими аргументами передают результат. Который имеет смысл, если ошибки не случилось.</li>
+    </ul>
+    <p>Поэтому, при таком подходе легко реализовать код функции обратного вызова, просто понимая что мы ждем массив чисел:</p>
+    <pre>
+      <code class="language-javascript line-numbers">
+        getData((error, numbers) => {
+          if (error) throw error;
+          const evenNumbers = numbers.filter(even);
+          console.log(evenNumbers); // <mark>[ 0, 2, 4, 6, 8 ]</mark>
+        });
+      </code>
+    </pre>
+  </section>
+
   <section class="slide chapter" id="readfile">
-    <h2>Чтение файлов с помощью <code>readFile</code></h2>
+    <h2>Работа с файлами</h2>
   </section>
   <section class="slide">
     <h2>Метод <code>readFile</code> ассинхронный</h2>
-    <p>
-      Это означает что система не будет ожидать завершения операции, и продолжит работу.
-    </p>
+    <p>Это означает что система не будет ожидать завершения операции, и продолжит работу.</p>
     <pre>
       <code class="language-javascript line-numbers">
         const fs = require('fs');
+        const conf = { encoding: 'utf8' };
         console.log('Читаем из файла …');
-        fs.readFile('./hello.txt', { encoding: 'utf8' }, (err, content) => {
+        fs.readFile('./hello.txt', conf, (err, content) => {
           if(err) return console.error(err);
           console.log('Содержимое файла:');
           console.log(content);
         });
-        console.log('Чтение файла завершено!');
+        console.log('Файл прочитан и содержимое выведено!');
       </code>
     </pre>
   </section>
@@ -549,7 +600,7 @@
       <code class="language-markup">
         > node readfile.js
         Читаем из файла …
-        <mark class="important">Чтение файла завершено!</mark>
+        <mark class="important">Файл прочитан и содержимое выведено!</mark>
         Содержимое файла:
         Привет, Мир!
       </code>
@@ -559,12 +610,29 @@
     </p>
   </section>
   <section class="slide">
+    <h2>Метод <code>readFile</code> ассинхронный</h2>
+    <p>Поэтому, если мы хотим выполнить какое-то действие, после выполнения асинхронной функции, то это действие нужно делать в функции обратного вызова.</p>
+    <pre>
+      <code class="language-javascript line-numbers">
+        const fs = require('fs');
+        const conf = { encoding: 'utf8' };
+        console.log('Читаем из файла …');
+        fs.readFile('./hello.txt', conf, (err, content) => {
+          if(err) return console.error(err);
+          console.log('Содержимое файла:');
+          console.log(content);
+          <mark>console.log('Файл прочитан и содержимое выведено!');</mark>
+        });
+      </code>
+    </pre>
+  </section>
+  <section class="slide">
     <h2>Получаем список файлов в папке</h2>
     <pre>
       <code class="language-javascript line-numbers">
         const fs = require('fs');
 
-        fs.readdir('./', function(err, files) {
+        fs.readdir('./', (err, files) => {
           if(err) return console.error(err);
           files.forEach(file => console.log(file));
         });
@@ -572,12 +640,12 @@
     </pre>
   </section>
   <section class="slide">
-    <h2>Проверим права на запись в файл</h2>
+    <h2>Проверим права на запись в файле</h2>
     <pre>
       <code class="language-javascript line-numbers">
         const fs = require('fs'), path = 'hello.txt';
 
-        fs.access(path, fs.constants.W_OK, function(err) {
+        fs.access(path, fs.constants.W_OK, err => {
           if (err) return console.log('нет прав на запись %s', path);
           console.log('есть права на запись %s', path);
         });
@@ -591,6 +659,124 @@
     </ol>
   </section>
 
+  <section class="slide">
+    <h2>Записываем данные в файл</h2>
+    <pre>
+      <code class="language-javascript line-numbers">
+        const fs = require('fs');
+        const text = 'Привет, Нетология!';
+        fs.writeFile('./hello.txt', text, err => {
+          if (err) throw err;
+          console.log('Файл сохранен');
+        });
+      </code>
+    </pre>
+  </section>
+
+  <section class="slide">
+    <h2>Создаем папку</h2>
+    <pre>
+      <code class="language-javascript line-numbers">
+        const fs = require('fs')
+        const name = './neto';
+        fs.mkdir(name, err => {
+          if (err) throw err;
+          console.log('Папка создана');
+        });
+      </code>
+    </pre>
+  </section>
+
+  <section class="slide">
+    <h2>Переименуем файл</h2>
+    <pre>
+      <code class="language-javascript line-numbers">
+        const fs = require('fs');
+        fs.rename('./hello.txt', './hw.txt', err => {
+          if (err) throw err;
+          console.log('Файл переименован');
+        });
+      </code>
+    </pre>
+    <p>Аналогично можно переименовать или переместить файл или папку.</p>
+  </section>
+
+  <section class="slide">
+    <h2>Допишем данные в файл</h2>
+    <pre>
+      <code class="language-javascript line-numbers">
+        const fs = require('fs');
+        const conf = { encoding: 'utf8' };
+        const text = 'Новые данные';
+        fs.appendFile('./hw.txt', text, conf, err => {
+          if (err) throw err;
+          console.log('Файл дополнен');
+        })
+      </code>
+    </pre>
+  </section>
+
+  <section class="slide chapter">
+    <h2>Последовательность асинхронных вызывов</h2>
+  </section>
+
+  <section class="slide">
+    <h2>Параллельное выполнение независимых операций</h2>
+    <p>Нет никакой гарантии что файлы будут созданы в том порядке, как был вызван метод <code>writeFile</code></p>
+    <pre>
+      <code class="language-javascript line-numbers">
+        const fs = require('fs');
+        const names = ['Иван', 'Олег', 'Екатерина'];
+        names.forEach((name, i) => {
+          fs.writeFile(`./name${i}.txt`, name, err => {
+            if (err) throw err;
+            console.log(`Файл name${i}.txt сохранен`);
+          });
+        });
+      </code>
+    </pre>
+  </section>
+
+  <section class="slide">
+    <h2>Последовательное выполнение зависимых операций</h2>
+    <p>Что если нам сначала нужно создать папку, а потом создать файл в ней?</p>
+    <pre>
+      <code class="language-javascript line-numbers">
+        const fs = require('fs'), opts = { encoding: 'utf8' };
+        fs.mkdir('./data', err => {
+          if (err) throw err;
+          console.log('Папка создана!');
+        });
+        fs.writeFile('./data/test.txt', 'Привет!', opts, err => {
+          if (err) throw err;
+          console.log('Файл создан!');
+        });
+      </code>
+    </pre>
+    <p>Если мы просто последовательно вызовем <code>mkdir</code> и <code>writeFile</code>, нет никаких гарантий что файл создастся после того как будет создана папка. Он может быть создан и раньше. И это приведет к ошибке.</p>
+  </section>
+
+  <section class="slide">
+    <h2>Выполнять зависимое действие нужно в колбеке</h2>
+    <pre>
+      <code class="language-javascript line-numbers">
+        const fs = require('fs'), opts = { encoding: 'utf8' };
+        fs.mkdir('./data', err => {
+          if (err) throw err;
+          console.log('Папка создана!');
+          fs.writeFile('./data/test.txt', 'Привет!', opts, err => {
+            if (err) throw err;
+            console.log('Файл создан!');
+          });
+        });
+      </code>
+    </pre>
+    <p>А это приводит к огромной вложенности функций обратного вызова. И абсолютно не читаемому коду.</p>
+  </section>
+
+  <section class="slide chapter">
+    <h2>Техники борьбы с колбэк-адом</h2>
+  </section>
 
   <section class="slide last">
     <p class="thanx">Задавайте вопросы и напишите отзыв о лекции!</p>
