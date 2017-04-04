@@ -37,7 +37,7 @@
     <section class="slide" id="roadmap">
       <h2>План занятия</h2>
       <ul>
-        <li>Основы протокала HTTP.</li>
+        <li>Основы протокола HTTP.</li>
         <li>Создаём HTTP-клиент.</li>
         <li>Создаём HTTP-сервер.</li>
       </ul>
@@ -85,13 +85,13 @@
           id=29841&amount=5
         </code>
       </pre>
-      <p>В данном запросе передаются один заголовок <code>Host</code>. А так же данные в URL-кодированном виде:</p>
+      <p>В данном запросе передается один заголовок <code>Host</code>. А также данные в URL-кодированном виде:</p>
       <pre data-start="4">
         <code class="language-http line-numbers">
           id=29841&amount=5
         </code>
       </pre>
-      <p>Пары ключ значение через <code>=</code> сцепленные символом <code>&amp;</code>:</p>
+      <p>Пары ключ-значение через <code>=</code>, сцепленные символом <code>&amp;</code>:</p>
       <dl>
         <dt>id</dt>
         <dd>29841</dd>
@@ -138,7 +138,7 @@
         </code>
       </pre>
 
-      <p>Сервер сообщает что передаёт нам текстовый документ в формате HTML:</p>
+      <p>Сервер сообщает, что передаёт нам текстовый документ в формате HTML:</p>
       <pre data-start="3">
         <code class="language-http line-numbers">
           Content-Type: <mark>text/html</mark>
@@ -167,7 +167,7 @@
         <dt>301</dt>
         <dd>запрашиваемый документ теперь доступен по новому адресу <code>Moved Permanently</code>. Адрес передан в заголовке <code>Location</code>.</dd>
         <dt>302</dt>
-        <dd>запрашивыемый документ временно доступен по новому адресу <code>Moved Temporarily</code>.</dd>
+        <dd>запрашиваемый документ временно доступен по новому адресу <code>Moved Temporarily</code>.</dd>
         <dt>400</dt>
         <dd>запрос имеет синтаксические ошибки <code>Bad Request</code>.</dd>
         <dt>401</dt>
@@ -258,7 +258,7 @@
       </table>
     </section>
     <section class="slide">
-      <h2>Экспериментируем используя утилиту telnet</h2>
+      <h2>Экспериментируем, используя утилиту telnet</h2>
       <div style="font-size: 70%">
         <script class="language-markup" type="text/plain" data-line="1, 5-7">
         $ telnet netology.ru 80
@@ -343,7 +343,7 @@
     </section>
     <section class="slide">
       <h2>Формируем запрос</h2>
-      <p>Для выполнения запроса используются модули <code>http</code> или <code>https</code>. В нашем случае так как протокол HTTPS:</p>
+      <p>Для выполнения запроса используются модули <code>http</code> или <code>https</code>. В нашем случае, так как протокол HTTPS:</p>
       <pre>
         <code class="language-javascript line-numbers">
           const https = require('https');
@@ -382,13 +382,13 @@
     </section>
     <section class="slide">
       <h2>Обработчик ответа</h2>
-      <p>После отправки запроса и получения заголовков ответа, запрос бросит событие <code>response</code>. Назначим функцию обработчик на это событие:</p>
+      <p>После отправки запроса и получения заголовков ответа, запрос бросит событие <code>response</code>. Назначим функцию-обработчик на это событие:</p>
       <pre data-start="19">
         <code class="language-javascript line-numbers">
           request.on('response', handler);
         </code>
       </pre>
-      <p>В обработчик передаётся объект <code>http.IncomingMessage</code> который представляет ответ сервера:</p>
+      <p>В обработчик передаётся объект <code>http.IncomingMessage</code>, который представляет ответ сервера:</p>
       <pre data-start="9">
         <code class="language-javascript line-numbers">
           function handler(response) {
@@ -405,7 +405,7 @@
     </section>
     <section class="slide">
       <h2>Ответ сервера</h2>
-      <p>Ответ сервера это поток. Данные с сервера передаются фрагментам. По событию <code>data</code> мы можем собрать все фрагменты в одну строку:</p>
+      <p>Ответ сервера — это поток. Данные с сервера передаются фрагментами. По событию <code>data</code> мы можем собрать все фрагменты в одну строку:</p>
       <pre data-start="10">
         <code class="language-javascript line-numbers">
           let data = '';
@@ -414,7 +414,7 @@
           });
         </code>
       </pre>
-      <p>Когда все данные будут получены, поток будет закрыт, и вброшено событие <code>end</code>. Для нас это означает что мы получили все данные и можем приступить к их обработке, передав их в нашу функцию <code>process</code>:</p>
+      <p>Когда все данные будут получены, поток будет закрыт и вброшено событие <code>end</code>. Для нас это означает, что мы получили все данные и можем приступить к их обработке, передав их в нашу функцию <code>process</code>:</p>
       <pre data-start="14">
         <code class="language-javascript line-numbers">
           response.on('end', function () {
@@ -425,7 +425,7 @@
     </section>
     <section class="slide">
       <h2>Статус ответа сервера</h2>
-      <p>У объекта так же есть свойства и методы. Свойство <code>statusCode</code> содержит код ответа сервера. По нему можно убедиться что мы получили запрошенные данные:</p>
+      <p>У объекта также есть свойства и методы. Свойство <code>statusCode</code> содержит код ответа сервера. По нему можно убедиться, что мы получили запрошенные данные:</p>
       <pre data-line="2-9" data-start="9">
         <code class="language-javascript line-numbers">
           function handler(response) {
@@ -530,7 +530,7 @@
     </section>
     <section class="slide">
       <h2>Передаём заголовки</h2>
-      <p>Укажем в каком формате мы передаём данные в заголовке <code>Content-Type</code>. Наш формат <code>application/x-www-form-urlencoded</code>:</p>
+      <p>Укажем, в каком формате мы передаём данные в заголовке <code>Content-Type</code>. Наш формат <code>application/x-www-form-urlencoded</code>:</p>
       <pre data-start="5" data-line="6-7">
         <code class="language-javascript line-numbers">
           let options = {
@@ -548,7 +548,7 @@
     </section>
     <section class="slide">
       <h2>Передаём данные</h2>
-      <p>Запрос <code>request</code> это записываемый поток. Поэтому данные нужно просто записать в него методом <code>write</code>:</p>
+      <p>Запрос <code>request</code> — это записываемый поток. Поэтому данные нужно просто записать в него методом <code>write</code>:</p>
       <pre data-start="15" data-line="3">
         <code class="language-javascript line-numbers">
           const https = require('https');
@@ -561,7 +561,7 @@
     </section>
     <section class="slide">
       <h2>GET-запрос с <code>http.get</code></h2>
-      <p>Метод <code>get</code> полный аналог <code>request</code> и отличается тем что задаёт тип запроса <code>GET</code> и вызывает <code>end</code> автоматически:</p>
+      <p>Метод <code>get</code> — полный аналог <code>request</code> и отличается тем, что задаёт тип запроса <code>GET</code> и вызывает <code>end</code> автоматически:</p>
       <pre>
         <code class="language-javascript line-numbers">
           const http = require('http');
@@ -572,7 +572,7 @@
           });
         </code>
       </pre>
-      <p>Так как <code>res</code> у нас читаемый поток, мы можем перенаправить вывод используя <code>pipe</code> прямо в поток вывода, который доступен в <code>process.stdout</code>.</p>
+      <p>Так как <code>res</code> у нас читаемый поток, мы можем перенаправить вывод, используя <code>pipe</code> прямо в поток вывода, который доступен в <code>process.stdout</code>.</p>
     </section>
     <section class="slide">
       <h2>Обработка ошибок сети</h2>
@@ -590,7 +590,7 @@
             });
         </code>
       </pre>
-      <p>Но сюда не попадают ошибки клиента и сервера (<code>404</code>, <code>401</code>, <code>500</code>, <code>503</code>). Их нужно обрабатывать проверяя код ответа.</p>
+      <p>Но сюда не попадают ошибки клиента и сервера (<code>404</code>, <code>401</code>, <code>500</code>, <code>503</code>). Их нужно обрабатывать, проверяя код ответа.</p>
     </section>
 
     <section class="slide chapter">
@@ -643,7 +643,7 @@
     </section>
     <section class="slide">
       <h2>Создаем сервер</h2>
-      <p>Функция создания сервера <code>createServer</code> находится в модуле <code>http</code>. Так же нам потребуется порт, на котором будет доступен наш сервер:</p>
+      <p>Функция создания сервера <code>createServer</code> находится в модуле <code>http</code>. Также нам потребуется порт, на котором будет доступен наш сервер:</p>
       <pre>
         <code class="language-javascript line-numbers">
           const http = require('http');
@@ -671,7 +671,7 @@
           server.on('request', handler);
         </code>
       </pre>
-      <p>Обработчик принимает в качестве аргументов два объекта: запрос (<code>IncomingMessage</code>) и ответ (<code>ServerResponse</code>). Запрос читаемый поток, ответ записываемый:</p>
+      <p>Обработчик принимает в качестве аргументов два объекта: запрос (<code>IncomingMessage</code>) и ответ (<code>ServerResponse</code>). Запрос — читаемый поток, ответ — записываемый:</p>
       <pre data-start="4">
         <code class="language-javascript line-numbers">
           function handler(req, res) {
@@ -685,14 +685,14 @@
     </section>
     <section class="slide">
       <h2>Параметры запроса</h2>
-      <p>Адрес запрашиваемой страницы находится в свойстве <code>url</code>. Удаляем в адресе <code>/</code> и если получается пустая строка то берём <code>World</code>:</p>
+      <p>Адрес запрашиваемой страницы находится в свойстве <code>url</code>. Удаляем в адресе <code>/</code>, и если получается пустая строка, то берём <code>World</code>:</p>
       <pre data-start="5">
         <code class="language-javascript line-numbers">
           let name = <mark>req.url</mark>.replace('/', '') || 'World';
         </code>
       </pre>
-      <p>Если открыть адрес <code>http://localhost:3333/Dima</code> то <code>name</code> будет равно <code>Dima</code>, а если <code>http://localhost:3333/</code> то <code>World</code>.</p>
-      <p>Метод с которым отправлен запрос доступен в свойстве <code>method</code>, а заголовки в свойстве <code>headers</code>:</p>
+      <p>Если открыть адрес <code>http://localhost:3333/Dima</code>, то <code>name</code> будет равно <code>Dima</code>, а если <code>http://localhost:3333/</code>, то <code>World</code>.</p>
+      <p>Метод, с которым отправлен запрос, доступен в свойстве <code>method</code>, а заголовки — в свойстве <code>headers</code>:</p>
       <pre>
         <code class="language-javascript line-numbers">
           console.log(req.method);
@@ -702,7 +702,7 @@
     </section>
     <section class="slide">
       <h2>Получаем данные запроса</h2>
-      <p>Запрос <code>req</code> является читаемым потоком и данные от клиента поступают порциями. Будем читать их и ожидать закрытия потока, как при реализации клиента:</p>
+      <p>Запрос <code>req</code> является читаемым потоком, и данные от клиента поступают порциями. Будем читать их и ожидать закрытия потока, как при реализации клиента:</p>
       <pre data-start="4" data-line="2-4, 6">
         <code class="language-javascript line-numbers">
           function handler(req, res) {
@@ -719,7 +719,7 @@
     </section>
     <section class="slide">
       <h2>Разбираем данные запроса</h2>
-      <p>В зависимости от типа мы можем данные, которые поступают в виде строки, преобразовать в структуру:</p>
+      <p>В зависимости от типа, мы можем данные, которые поступают в виде строки, преобразовать в структуру:</p>
       <pre data-start="19">
         <code class="language-javascript line-numbers">
           function parse(data, type) {
@@ -739,7 +739,7 @@
     </section>
     <section class="slide">
       <h2>Используем данные запроса</h2>
-      <p>Обновим обработчик события <code>end</code>, преобразуем данные в объект используя нашу функцию <code>parse</code>:</p>
+      <p>Обновим обработчик события <code>end</code>, преобразуем данные в объект, используя нашу функцию <code>parse</code>:</p>
       <pre data-start="8" data-line="1, 3">
         <code class="language-javascript line-numbers">
           data = parse(data, req.headers['content-type']);
@@ -764,7 +764,7 @@
     </section>
     <section class="slide">
       <h2>Реализуем функцию проверки файла</h2>
-      <p>Она должна проверить что указанный путь является файлом и у нас есть доступ на чтение:</p>
+      <p>Она должна проверить, что указанный путь является файлом и у нас есть доступ на чтение:</p>
       <pre data-start="7" data-line="5-7" style="font-size: 70%;">
         <code class="language-javascript line-numbers">
           function checkFile(filename) {
@@ -784,11 +784,11 @@
           }
         </code>
       </pre>
-      <p>Если указанный путь это папка, то проверяем доступ к файлу <code>index.html</code> в ней.</p>
+      <p>Если указанный путь — это папка, то проверяем доступ к файлу <code>index.html</code> в ней.</p>
     </section>
     <section class="slide">
       <h2>Реализуем обработчик запросов</h2>
-      <p>Проверяем файл который запрошен в URL относительно папки <code>base</code>. Если файл доступен, то выдаем его в качестве тела ответа. Иначе сообщаем об ошибке <code>404</code>:</p>
+      <p>Проверяем файл, который запрошен в URL, относительно папки <code>base</code>. Если файл доступен, то выдаем его в качестве тела ответа. Иначе сообщаем об ошибке <code>404</code>:</p>
       <pre data-start="23" data-line="5, 8-9">
         <code class="language-javascript line-numbers">
           function handler(req, res) {
