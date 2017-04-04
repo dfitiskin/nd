@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <title>Менеджер зависимостей NPM</title>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="node_modules/shower-ribbon/styles/screen-4x3.css">
+    <link rel="stylesheet" href="css/prism.css">
+    <link rel="stylesheet" href="css/prism-fix.css">
+    <link rel="stylesheet" href="css/netology.css">
+  </head>
+  <body class="shower">
+    <header class="caption">
+      <h1>Менеджер зависимостей NPM</h1>
+      <p>Дмитрий Фитискин, Нетология</p>
+    </header>
+
+    <section class="slide" id="cover">
+      <h2>Менеджер зависимостей NPM</h2>
+      <p>
+        <img src="i/dfitiskin.jpg" alt="" class="avatar">
+        Дмитрий Фитискин <span class="position">Нетология</span>
+      </p>
+    </section>
+    <section class="slide author" id="author">
+      <img src="i/dfitiskin.jpg" alt="">
+      <h1>Дмитрий Фитискин</h1>
+      <p class="position">руководитель направления «Программирование»</p>
+      <ul class="contacts">
+        <li><a href="mailto:dfitiskin@gmail.ru"><i class="fa fa-envelope-o" aria-hidden="true"></i>dfitiskin@gmail.ru</a></li>
+        <li><a href="skype:dfitiskin?call"><i class="fa fa-skype" aria-hidden="true"></i>dfitiskin</a></li>
+        <li><a href="https://fb.me/dfitiskin"><i class="fa fa-facebook" aria-hidden="true"></i>fb.me/dfitiskin</a></li>
+      </ul>
+    </section>
+
+    <section class="slide chapter" id="example">
+      <h2>Пример использования сторонних библиотек</h2>
+    </section>
+    <section class="slide">
+      <h2>Задача</h2>
+      <p>Получить курс валют и вывести в консоль курс Евро и Доллара США.</p>
+    </section>
+    <section class="slide">
+      <h2>Простое решение</h2>
+      <pre style="font-size: 65%">
+        <code class="language-javascript line-numbers">
+          const https = require('https');
+          var options = {
+            host: 'netology-fbb-store-api.herokuapp.com',
+            path: '/currency'
+          };
+          const callback = response => {
+            let str = '';
+            response.on('data', function (chunk) {
+              str += chunk;
+            });
+            response.on('end', function () {
+              let curr = JSON.parse(str);
+              curr
+                .filter(item => item.CharCode === 'USD' || item.CharCode === 'EUR')
+                .forEach(item => console.log(item.Value));
+            });
+          }
+          https.request(options, callback).end();
+        </code>
+      </pre>
+    </section>
+    <section class="slide">
+      <h2>Решение с использованием модуля <code>request</code></h2>
+      <pre style="font-size: 65%">
+        <code class="language-javascript line-numbers">
+          const request = require('request');
+
+          const callback = (error, response, body) => {
+            if (!error && response.statusCode == 200) {
+              let curr = JSON.parse(body);
+              curr
+                .filter(item => item.CharCode === 'USD' || item.CharCode === 'EUR')
+                .forEach(item => console.log(item.Value));
+            }
+          };
+
+          request('https://netology-fbb-store-api.herokuapp.com/currency', callback);
+        </code>
+      </pre>
+      <p class="note">Но модуля <code>request</code> нет в ядре Node.js. Это сторонний модуль. Как нам его получить?</p>
+    </section>
+    <section class="slide">
+      <h2>Установка <code>request</code></h2>
+      <p>Шаг 1: выполним команду в консоле:</p>
+      <pre>
+        <code class="language-markup">
+          $ npm install request
+        </code>
+      </pre>
+      <p>Шаг 2: наше приложение готово к запуску:</p>
+      <pre>
+        <code class="language-markup">
+          $ node currency.js
+          63.9943
+          72.0832
+        </code>
+      </pre>
+      <p class="note">Как мне кажется польза и мощ пакетов очевидна.</p>
+    </section>
+
+    <section class="slide chapter" id="npm">
+      <h2>Менеджер пакетов NPM</h2>
+    </section>
+    <section class="slide">
+      <figure class="blockquote">
+        <img src="i/code.jpg" alt="">
+        <blockquote>
+          <p>
+            <strong>Система управления пакетами</strong> — набор программного обеспечения, позволяющего управлять
+            процессом установки, удаления, настройки и обновления различных компонентов программного обеспечения.
+            Системы управления пакетами активно используются в различных дистрибутивах операционной системы Linux и
+            других UNIX-подобных операционных системах.</p>
+        </blockquote>
+        <a target="_blank" href="https://ru.wikipedia.org/wiki/%D0%A1%D0%B8%D1%81%D1%82%D0%B5%D0%BC%D0%B0_%D1%83%D0%BF%D1%80%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D1%8F_%D0%BF%D0%B0%D0%BA%D0%B5%D1%82%D0%B0%D0%BC%D0%B8">Описание из Википедии</a>
+      </figure>
+    </section>
+    <section class="slide">
+      <h2>Зачем нужен менеджер пакетов?</h2>
+      <ul>
+        <li>Позволяет использовать в вашем проекте различные библиотеки и плагины (зависимости)</li>
+        <li>Позволяет легко устанавливать, обновлять, удалять зависимости</li>
+        <li>Позволяет легко понять, какие зависимости используются в вашем проекте</li>
+        <li>Позволяют автоматизировать рутинные задачи</li>
+      </ul>
+    </section>
+    <section class="slide">
+      <h2>Что умеет NPM?</h2>
+      <ul>
+        <li>Поиск пакетов</li>
+        <li>Просмотр информации о пакете</li>
+        <li>Установка пакетов</li>
+        <li>Удаление установленных пакетов</li>
+        <li>Создание и публикация нового пакета</li>
+      </ul>
+    </section>
+
+    <section class="slide chapter" id="commands">
+      <h2>Команды NPM</h2>
+    </section>
+    <section class="slide">
+      <h2>Поиск пакетов в NPM</h2>
+      <p>Команда <code>search</code></p>
+      <pre>
+        <code class="language-markup">
+          $ npm search <mark>nodemon</mark>
+          NAME             DESCRIPTION
+          katon-dev        Automatically starts your development servers s
+          kelTool          ## Global Dependencies to Install ``` npm insta
+          nodedev          Wrapper for nodemon and node-inspector as a rep
+          <mark>nodemon          Simple monitor script for use during developmen</mark>
+          nodemongo-vriz   nodeMongo Test
+        </code>
+      </pre>
+      <p class="note">Так же можно искать пакеты на <a href="https://www.npmjs.com/">npmjs.com</a></p>
+    </section>
+
+    <section class="slide">
+      <h2>Просмотр информации о пакете</h2>
+      <p>Команда <code>show</code>. Показывает информацию в JSON формате:</p>
+      <pre>
+        <code class="language-markup">
+          $ npm show <mark>nodemon</mark>
+
+          { name: 'nodemon',
+            description: 'Simple monitor script for use during development of a node.js app.',
+            'dist-tags': { latest: '1.10.0', dev: '1.5.0-alpha4', debug: '1.3.0-2' },
+            versions: [ '0.1.4', '0.1.5', '0.1.6', '0.1.7',  '0.1.8',  '0.2.0' ],
+            maintainers: [ 'remy <remy@remysharp.com>' ],
+            author: 'Remy Sharp (http://github.com/remy)',
+            repository: { type: 'git', url: 'git+https://github.com/remy/nodemon.git' },
+            time: { modified: '2016-07-25T21:24:00.671Z', created: '2011-02-03T17:03:46.217Z',
+        </code>
+      </pre>
+    </section>
+
+    <section class="slide">
+      <h2>Установка пакетов</h2>
+      <p>Есть несколько вариантов установки:</p>
+      <ul>
+        <li>Простая установка пакета</li>
+        <li>Глобальная установка пакета в систему</li>
+        <li>Установка пакета в качестве зависимости для вашего приложения</li>
+      </ul>
+    </section>
+
+    <section class="slide">
+      <h2>Простая установка пакета</h2>
+      <p>Команда <code>install</code> или сокращенный вариант <code>i</code></p>
+      <pre>
+        <code class="language-markup">
+          $ npm install nodemon
+        </code>
+      </pre>
+      <p>
+        После этого в текущей директории появится новая директория <code>node_modules</code> а в ней директория <code>nodemon</code>.
+      </p>
+      <p class="note">
+        При установке пакетов в директории <code>node_modules</code> могут появляться не только директории установленных
+        вами пакетов, но и их зависимостей. В случае <code>nodemon</code> в <code>node_modules</code> появится так же
+        директория <code>chokidar</code>, <code>minimatch</code>, <code>undefsafe</code> и другие.
+      </p>
+    </section>
+
+    <section class="slide">
+      <h2>Глобальная установка пакета</h2>
+      <p>С флагом <code>-g</code>:</p>
+      <pre>
+        <code class="language-markup">
+          $ npm install <mark>-g</mark> nodemon
+        </code>
+      </pre>
+      <p>
+        При этом пакет <code>nodemon</code> будет установлен не в текущую директорию, а в директорию для глобально
+        установленных пакетов. Она одна для пользователя в системе.
+      </p>
+      <p class="note">
+        Устанавливайте глобально только те пакеты, которые специально для этого созданы. Как правило
+        глобально устанавливаются пакеты, предоставляющие исполняемый файл (приложение для командной строки, например
+        <code>nodemon</code>).
+      </p>
+    </section>
+    <section class="slide">
+      <h2>Установка пакета в качестве зависимости</h2>
+      <p>Установка с флагом <code>--save</code> или <code>-S</code>:</p>
+      <pre>
+        <code class="language-markup">
+          $ npm install <mark>--save</mark> request
+        </code>
+      </pre>
+      <p>Для установки пакетов, которые необходимы только при разработке проекта, и не актуальны при использовании, можно подключить как зависимость для разработки с флагом <code>--save-dev</code> или <code>-D</code>:</p>
+      <pre class="code"><pre>
+        <code class="language-markup">
+          $ npm install <mark>--save-dev</mark> nodemone
+        </code>
+      </pre>
+    </section>
+    <section class="slide">
+      <h2>Установка всех зависимостей</h2>
+      <p>Команда <code>install</code> без дополнительных параметров устанавливает все зависимости:</p>
+      <pre>
+        <code class="language-markup">
+          $ npm install
+        </code>
+      </pre>
+      <p class="note">Зависимости прописываются в файле <code>package.json</code>, который мы изучим далее.</p>
+    </section>
+    <section class="slide">
+      <h2>Обновление ранее установленных зависимостей</h2>
+      <p>Команда <code>update</code> позволяет установить более новые версии тех пакетов, которые прописаны как зависимости.</p>
+      <pre>
+        <code class="language-markup">
+          $ npm update
+        </code>
+      </pre>
+      <p class="note">Обновление происходит с учетом ограничения по версиям, заданным в <code>package.json</code>.</p>
+    </section>
+    <section class="slide">
+      <h2>Удаление установленных пакетов</h2>
+      <p>Команда <code>uninstall</code> удаляет ранее установленный пакет:</p>
+      <pre>
+        <code class="language-markup">
+          $ npm <mark>uninstall</mark> request
+        </code>
+      </pre>
+      <p>Для того чтобы удалить пакет и из зависимостей тоже, используйте ключи <code>--save</code> или <code>--save-dev</code>:</p>
+      <pre class="code"><pre>
+        <code class="language-markup">
+          $ npm uninstall <mark>--save</mark> request
+        </code>
+      </pre>
+    </section>
+
+    <section class="slide chapter" id="package.json">
+      <h2>Описание проекта в <code>package.json</code></h2>
+    </section>
+    <section class="slide">
+      <h2>Ошибка при установке пакета в качестве зависимости</h2>
+      <pre class="code">
+        <code class="language-markup">
+          $ npm install --save request
+          npm <mark class="important">WARN</mark>: no such file or directory
+          open '/path/to/your/project/<mark>package.json</mark>'
+        </code>
+      </pre>
+
+      <p>Что такое <code>package.json</code> и для чего он нужен?</p>
+    </section>
+    <section class="slide">
+      <h2>package.json</h2>
+      <ul>
+        <li><a href="https://docs.npmjs.com/files/package.json" target="_blank">Официальная документация</a></li>
+        <li><a href="http://browsenpm.org/package.json" target="_blank">Интерактивная шпаргалка</a></li>
+      </ul>
+      <p>
+        Если коротко, то <code>package.json</code> – это JSON-файл с «аннотацией» вашего проекта (название, версия, зависимости и многое другое).
+        Его можно создать вручную или же воспользоваться командой:
+      </p>
+      <pre class="code">
+        <code class="language-markup">
+          $ npm init
+        </code>
+      </pre>
+    </section>
+    <section class="slide">
+      <h2>Название проекта <code>name</code></h2>
+      <p>Уникальное имя вашего проекта записанное в нижнем регистре. Это свойство обязательное.</p>
+      <pre>
+        <code class="language-json line-numbers">
+          {
+            "name": "my-cool-package",
+        </code>
+      </pre>
+      <pre>
+        <code class="language-markup">
+          $ npm init
+          Press ^C at any time to quit.
+          name: (<mark>folder-name</mark>) <mark>my-cool-package</mark>
+        </code>
+      </pre>
+      <p class="note">Это же свойство задаёт имя проекта в публичном каталоге, когда проект будет опубликован.</p>
+    </section>
+    <section class="slide">
+      <h2>Версия проекта <code>version</code></h2>
+      <pre data-start="3">
+        <code class="language-json line-numbers">
+          "version": "3.5.12",
+        </code>
+      </pre>
+      <pre>
+        <code class="language-markup">
+          version: (<mark>1.0.0</mark>) <mark>3.5.12</mark>
+        </code>
+      </pre>
+      <p class="note">Записывается в формате MAJOR.MINOR.PATCH части которой увеличивается когда в проекте появились изменения:</p>
+      <ul class="note">
+        <li>MAJOR — не имеющие обратной совместимости с предыдущими версиями.</li>
+        <li>MINOR — изменения с обратной совместимостью или новые функции.</li>
+        <li>PATCH — обратно-совместимые исправления ошибок.</li>
+      </ul>
+    </section>
+    <section class="slide">
+      <h2>Основной файл проекта <code>main</code></h2>
+      <p>То, что вы обычно запускаете <code>node server/app.js</code>. Основная точка входа:</p>
+      <pre data-start="4">
+        <code class="language-json line-numbers">
+          "main": "server/app.js",
+        </code>
+      </pre>
+      <pre>
+        <code class="language-markup">
+          entry point: (<mark>index.js</mark>) <mark>server/app.js</mark>
+        </code>
+      </pre>
+      <p class="note">Подключив пакет <code>require('my-cool-package')</code> мы получим именно этот файл. Рекомендуется не делать побочных действий (например, запуск веб-сервера). Также, если в папке проекта запускать <code>node .</code> то запустится именно этот файл.</p>
+    </section>
+    <section class="slide">
+      <h2>Автор проекта <code>author</code></h2>
+      <p>Ваше имя и контактные данные:</p>
+      <pre data-start="5">
+        <code class="language-json line-numbers">
+          "author": "Ivan Ivanov <ivan@ivanov.co>",
+        </code>
+      </pre>
+      <pre>
+        <code class="language-markup">
+          author: <mark>Ivan Ivanov <ivan@ivanov.co></mark>
+        </code>
+      </pre>
+    </section>
+
+    <section class="slide chapter" id="scripts">
+      <h2>NPM скрипты</h2>
+    </section>
+    <section class="slide">
+      <h2>Что такое npm-скрипт</h2>
+      <p>
+          Одним из параметров в файле <code>package.json</code> является параметр <code>scripts</code>. Этот параметр описывает команды, которые доступны при использовании вашего пакета.
+      </p>
+      <p>
+          Частью ядра NPM является команда <code>npm run-script</code> (или <code>npm run</code>). Эта команда позволяет вызвать команды из <code>scripts</code> прописанные в файле <code>package.json</code>.
+      </p>
+    </section>
+    <section class="slide">
+      <h2>Получаем список скриптов</h2>
+      <p>Команда <code>run</code> без параметров выведет все доступные скрипты, описанные в <code>package.json</code></p>
+      <pre>
+        <code class="language-markup">
+          $ npm run
+          Lifecycle scripts included in npm-test:
+          <mark>test</mark>
+            mocha
+          <mark>start</mark>
+            nodemon .
+        </code>
+      </pre>
+    </section>
+    <section class="slide">
+      <h2>Запускаем скрипт</h2>
+      <p>Указав после команды <code>run</code> название скрипта из <code>package.json</code>:</p>
+      <pre>
+        <code class="language-markup">
+          $ npm run start
+
+          > npm-test@1.0.0 start /Users/dfitiskin/Documents/workspace/nd/examples/npm
+          <mark>$ nodemon .</mark>
+
+          [nodemon] 1.8.1
+          [nodemon] to restart at any time, enter `rs`
+          [nodemon] watching: *.*
+          [nodemon] starting `node .`
+        </code>
+      </pre>
+    </section>
+    <section class="slide">
+      <h2>Создадим свой скрипт</h2>
+      <p>Добавим в файл <code>package.json</code> следующий фрагмент:</p>
+      <pre data-start="6">
+        <code class="language-json line-numbers">
+          "scripts": {
+            "start": "nodemon .",
+            <mark>"hw": "echo 'Hello World!'"</mark>
+          }
+        </code>
+      </pre>
+      <p>И вызовем наш новый скрипт <code>hw</code>:</p>
+      <pre>
+        <code class="language-markup">
+          $ npm run hw
+          > npm-test@1.0.0 hw /Users/dfitiskin/Documents/workspace/nd/examples/npm
+          > <mark>echo 'Hello World!'</mark>
+          Hello World!
+        </code>
+      </pre>
+    </section>
+    <section class="slide">
+      <h2>Глобальная установка пакетов</h2>
+      <ul>
+        <li>Некоторые пакеты предоставляют консольные утилиты для использования (например, <code>nodemon</code>).</li>
+        <li>Чтобы использовать эти утилиты в командной строке, необходимо установить эти пакеты глобально (с флагом <code>-g</code>).</li>
+        <li>Если же вы планируете их использовать как npm-скрипты, то глобальная установка не требуется.</li>
+      </ul>
+    </section>
+    <section class="slide">
+      <h2>Вызов npm скрипта из другого скрипта</h2>
+      <p>Так как в качестве скрипта мы можем вызвать любую команду доступную в консоле, то мы можем вызывать одни скрипты из других:</p>
+      <pre data-start="6">
+        <code class="language-json line-numbers">
+          "scripts": {
+            "start": "nodemon .",
+            "hw": "echo 'Hello World!'",
+            <mark>"test": "npm run hw && npm run start"</mark>
+          }
+        </code>
+      </pre>
+      <p class="note">Символ <code>&&</code> позволяет объединить команды и выполнить последовательно.</p>
+    </section>
+
+    <section class="slide last">
+      <p class="thanx">Задавайте вопросы и напишите отзыв о лекции!</p>
+      <address>Дима Фитискин</address>
+      <ul class="contacts">
+        <li><a href="mailto:dfitiskin@gmail.ru"><i class="fa fa-envelope-o" aria-hidden="true"></i>dfitiskin@gmail.ru</a></li>
+        <li><a href="skype:dfitiskin?call"><i class="fa fa-skype" aria-hidden="true"></i>dfitiskin</a></li>
+        <li><a href="https://fb.me/dfitiskin"><i class="fa fa-facebook" aria-hidden="true"></i>fb.me/dfitiskin</a></li>
+      </ul>
+    </section>
+
+    <div class="progress"></div>
+    <script src="node_modules/shower-core/shower.min.js"></script>
+    <script src="js/prism.js?v=2"></script>
+    <script src="https://use.fontawesome.com/30b5a52164.js"></script>
+
+  </body>
+</html>

@@ -1,0 +1,1198 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <title>ES2015 в Node.js</title>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="node_modules/shower-ribbon/styles/screen-4x3.css">
+  <link rel="stylesheet" href="css/prism.css">
+  <link rel="stylesheet" href="css/prism-fix.css">
+  <link rel="stylesheet" href="css/netology.css">
+</head>
+<body class="shower list">
+  <header class="caption">
+    <h1>ES2015 в Node.js</h1>
+    <p>Дмитрий Фитискин, Нетология</p>
+  </header>
+
+  <section class="slide" id="cover">
+    <h2>EcmaScript 2015 в&nbsp;Node.js</h2>
+    <p>
+      <img src="i/dfitiskin.jpg" alt="" class="avatar">
+      Дмитрий Фитискин <span class="position">Нетология</span>
+    </p>
+  </section>
+  <section class="slide author" id="author">
+    <img src="i/dfitiskin.jpg" alt="">
+    <h1>Дмитрий Фитискин</h1>
+    <p class="position">руководитель направления «Программирование»</p>
+    <ul class="contacts">
+      <li><a href="mailto:dfitiskin@gmail.ru"><i class="fa fa-envelope-o" aria-hidden="true"></i>dfitiskin@gmail.ru</a></li>
+      <li><a href="skype:dfitiskin?call"><i class="fa fa-skype" aria-hidden="true"></i>dfitiskin</a></li>
+      <li><a href="https://fb.me/dfitiskin"><i class="fa fa-facebook" aria-hidden="true"></i>fb.me/dfitiskin</a></li>
+    </ul>
+  </section>
+
+  <section class="slide chapter">
+    <h2>Предисловие</h2>
+  </section>
+  <section class="slide" id="intro">
+    <h2>Что такое Node.js</h2>
+    <ul>
+      <li>Платформа основанная на движке <a href="https://ru.wikipedia.org/wiki/V8_(движок_JavaScript)">V8</a> транслирующая JavaScript в машинный код.</li>
+      <li>Добавляет языку доступ устройствам ввода-вывода через специальное API написанное на языке C++.</li>
+      <li>Что делает JavaScript языком общего назначения.</li>
+      <li>Целью Node является предложить простой способ построения масштабируемых сетевых серверов.</li>
+      <li>Вместо многопоточности представляет собой событийно-ориентированную систему.</li>
+    </ul>
+  </section>
+  <section class="slide" id="install-win">
+    <h2>Установка Node.js</h2>
+    <ol>
+      <li>Скачать дистрибутив под свою платформу с сайта <a href="https://nodejs.org/en/download/">nodejs.org</a>.</li>
+      <li><mark>Windows installer (.msi)</mark> — установщик под Windows.</li>
+      <li><mark>Mac OS X Installer (.pkg)</mark> — установщик под OSX.</li>
+      <li>Есть и другие версии под разные платформы.</li>
+      <li>Под Win и OSX следуйте по шагам установщика.</li>
+    </ol>
+  </section>
+  <section class="slide" id="first-run">
+    <h2>Запуск Node.js</h2>
+    <ul>
+      <li>Node.js доступен в терминале или в командной строке.</li>
+      <li><code>node -v</code> — команда покажет версию Node.js.</li>
+      <li><code>node -i</code> — запуск интерактивной консоли.</li>
+      <li><code>node test.js</code> — выполнение кода из файла <code>test.js</code> расположенного в текущей папке.</li>
+    </ul>
+  </section>
+  <section class="slide" id="editor">
+    <h2>Выбор редактора</h2>
+    <figure>
+      <img src="//github-atom-io-herokuapp-com.global.ssl.fastly.net/assets/screenshot-main@2x-f5f56d18fa8896b3d987d24fc903d03f.png">
+      <figcaption>
+        Если вы еще не выбрали редактор — рекомендую <a href="https://atom.io">Atom</a>
+      </figcaption>
+    </figure>
+  </section>
+  <section class="slide" id="git">
+    <h2>Рекомендую использовать <a href="https://git-scm.com/">git</a> для контроля версий кода</h2>
+    <ul>
+      <li>Создать локально отдельный репозиторий для каждой домашней работы по проекту <code>git&nbsp;init</code>.</li>
+      <li>Фиксировать важные изменение по ходу работы добавив измененные файлы <code>git&nbsp;add</code> и зафиксировав версию <code>git&nbsp;commit</code>.</li>
+      <li>Опубликать локальный репозиторий на <a href="https://github.com/">GitHub</a> или <a href="https://bitbucket.org/">BitBucket</a> <code>git&nbsp;remote&nbsp;add</code></li>
+      <li>Опубликовать текущее состояние локального репозитория <code>git&nbsp;push</code>.</li>
+    </ul>
+  </section>
+
+  <section class="slide chapter">
+    <h2>План занятия</h2>
+  </section>
+  <section class="slide" id="roadmap">
+    <h2>План занятия</h2>
+    <ol class="double">
+      <li><a href="#var"><code>var</code> и его грабли</a></li>
+      <li><a href="#let">блочные переменные с <code>let</code></a></li>
+      <li><a href="#const">константы с <code>const</code></a></li>
+      <li><a href="#arrow-func">стрелочные функции</a></li>
+      <li><a href="#default-args">аргументы функции по умолчанию</a></li>
+      <li><a href="#rest">объединение параметров</a></li>
+      <li><a href="#spread">деструктуризация параметров</a></li>
+      <li><a href="#destructuring">деструктуризация массивов и объектов</a></li>
+      <li><a href="#object-literals">свойства и методы объектов</a></li>
+      <li><a href="#class">Классы</a></li>
+      <li><a href="#templates">Строковые шаблоны</a></li>
+      <li><a href="#for-of">Цикл <code>for … of</code></a></li>
+    </ol>
+  </section>
+
+  <section class="slide chapter" id="var">
+    <h2><code>var</code> и его грабли</a></h2>
+  </section>
+  <section class="slide">
+    <h2>Область видимости <code>var</code></h2>
+    <p>Чему будет равна переменная <code>name</code>?</p>
+    <pre>
+      <code class="language-javascript line-numbers">
+        function test() {
+          var name = 'Мария';
+        }
+
+        test();
+        console.log(name); // ???
+      </code>
+    </pre>
+  </section>
+  <section class="slide">
+    <h2>За пределами функции переменная <code>var</code> не доступна</h2>
+    <pre>
+      <code class="language-javascript line-numbers">
+        function test() {
+          var name = 'Мария';
+        }
+
+        test();
+        console.log(name); // <mark>undefined</mark>
+      </code>
+    </pre>
+  </section>
+  <section class="slide">
+    <h2>Видна ли переменная <code>var</code> за пределами блока?</h2>
+    <pre>
+      <code class="language-javascript line-numbers">
+        if (true) {
+          var name = 'Мария';
+        }
+
+        console.log(name); // ???
+      </code>
+    </pre>
+  </section>
+  <section class="slide">
+    <h2>Переменная доступна за пределеми блока в котором определена</h2>
+    <p>Так как область видимости переменной, объявленной через <code>var</code>, функция, создание и обращение происходит в одной области видимости.</p>
+    <pre>
+      <code class="language-javascript line-numbers">
+        if (true) {
+          var name = 'Мария';
+        }
+
+        console.log(name); // <mark>Мария</mark>
+      </code>
+    </pre>
+  </section>
+  <section class="slide">
+    <h2>Типичная ошибка с замыканиями</h2>
+    <pre>
+      <code class="language-javascript line-numbers">
+        var imax = 4, i;
+        for (var i = 0; i < imax; i++) {
+          setTimeout(function () {
+            console.log('Timeout %d finished', i + 1);
+          }, 1000);
+        }
+      </code>
+    </pre>
+  </section>
+  <section class="slide">
+    <h2>Ожидаемый результат</h2>
+    <pre>
+      <code class="language-markup">
+        > node test.js
+        Timeout 1 finished
+        Timeout 2 finished
+        Timeout 3 finished
+        Timeout 4 finished
+        >
+      </code>
+    </pre>
+  </section>
+  <section class="slide">
+    <h2>Фактический результат</h2>
+    <pre>
+      <code class="language-markup">
+        > node test.js
+        Timeout 5 finished
+        Timeout 5 finished
+        Timeout 5 finished
+        Timeout 5 finished
+        >
+      </code>
+    </pre>
+  </section>
+  <section class="slide">
+    <h2>Проблема из-за области видимости переменной&nbsp;<code>i</code></h2>
+    <ul>
+      <li>Мы создаем в цикле 4 анонимные функции.</li>
+      <li>Функции вызываются при наступлении события таймера.</li>
+      <li>В функции есть замыкание на переменную <code>i</code>.</li>
+      <li>У замкнутой переменной берется значение на момент вызова функции, а не на момент замыкания.</li>
+      <li>Чему равна переменная <code>i</code> на момент срабатывания первого таймера?</li>
+      <li>А чему она равна на момент выхода из цикла?</li>
+    </ul>
+  </section>
+  <section class="slide">
+    <h2>Как исправить типичную ошибку с замыканиями?</h2>
+    <pre>
+      <code class="language-javascript line-numbers">
+        var imax = 4, i;
+        for (var i = 0; i < imax; i++) {
+          setTimeout(function () {
+            console.log('Timeout %d finished', i + 1);
+          }, 1000);
+        }
+        console.log(i + 1); // <mark>5</mark>
+      </code>
+    </pre>
+  </section>
+  <section class="slide">
+    <h2>Вариант ES5: функция созданная и вызванная на лету</h2>
+    <pre>
+      <code class="language-javascript line-numbers">
+        var imax = 4, i;
+        for (var i = 0; i < imax; i++) {
+          setTimeout(function (timer) {
+            return function () {
+              console.log('Timeout %d finished', timer);
+            };
+          }(i + 1), 1000);
+        }
+      </code>
+    </pre>
+    <p>Чтобы зафиксировать значение переменной, поместим его в отдельную область видимости, которая будет уничтожена при переходе к следующей итерации.</p>
+  </section>
+  <section class="slide">
+    <h2>Вариант ES2015: переменная с блочной областью видимости</h2>
+    <pre>
+      <code class="language-javascript line-numbers">
+        var imax = 4, i;
+        for (var i = 0; i < imax; i++) {
+          let timer = i + 1;
+          setTimeout(function () {
+            console.log('Timeout %d finished', timer);
+          }, 1000);
+        }
+      </code>
+    </pre>
+  </section>
+  <section class="slide">
+    <h2>Почему пример с <code>let</code> работает?</h2>
+    <ul>
+      <li>Переменная объявленная через <code>let</code> имеет область видимости в рамках того блока в котором объявлена (от <code>{</code> до <code>}</code>).</li>
+      <li>Значит переменная <code>timer</code> живет в рамках одной итерации цикла.</li>
+      <li>Так как по окончании итерации область видимости очищается, текущее значение фиксируется в замыкании.</li>
+      <li>Значение переменной больше никогда не меняется, так как доступ к ней остаётся только в замыкии.</li>
+    </ul>
+  </section>
+
+  <section class="slide chapter" id="let">
+    <h2>Блочные переменные с <code>let</code></h2>
+  </section>
+  <section class="slide">
+    <h2>Переменные объявленные через <code>let</code> живут только внутри блока между <code>{</code> и <code>}</code></h2>
+    <pre>
+      <code class="language-javascript line-numbers">
+        let name = 'Иван';
+        {
+          let name = 'Мария';
+          console.log(name); // <mark>Мария</mark>
+        }
+        console.log(name); // <mark>Иван</mark>
+      </code>
+    </pre>
+  </section>
+  <section class="slide">
+    <h2>Аналогичный пример с <code>var</code> и функцией</h2>
+    <pre>
+      <code class="language-javascript line-numbers">
+        var name = 'Иван';
+        function () {
+          var name = 'Мария';
+          console.log(name); // <mark>Мария</mark>
+        }();
+        console.log(name); // <mark>Иван</mark>
+      </code>
+    </pre>
+  </section>
+  <section class="slide">
+    <h2>Итератор <code>i</code> в цикле</h2>
+    <pre>
+      <code class="language-javascript line-numbers">
+        let i = 99;
+        for (let i = 0; i < 3; ++i) {
+          console.log(i); // <mark>0, 1, 2</mark>
+        }
+        console.log(i); // <mark>99</mark>
+      </code>
+    </pre>
+    <pre>
+      <code class="language-javascript line-numbers">
+        var i = 99;
+        for (var i = 0; i < 3; ++i) {
+          console.log(i); // <mark>0, 1, 2</mark>
+        }
+        console.log(i); // <mark>3</mark>
+      </code>
+    </pre>
+  </section>
+  <section class="slide">
+    <h2>Объявления переменных не всплывают</h2>
+    <pre>
+      <code class="language-javascript line-numbers">
+        console.log(name); // <mark class="important">ReferenceError: name is not defined</mark>
+        let name = 'Иван';
+      </code>
+    </pre>
+    <p>При обращении к блочной переменной до объявления возникает ошибка <mark class="important">ReferenceError: name is not defined</mark>.</p>
+    <pre>
+      <code class="language-javascript line-numbers">
+        console.log(name); // <mark>undefined</mark>
+        var name = 'Иван';
+      </code>
+    </pre>
+    <p>До объявления ошибок не возникает. Но и значение не присвоено.</p>
+  </section>
+  <section class="slide">
+    <h2><code>let</code> нельзя использовать вне блока кода в условиях</h2>
+    <pre>
+      <code class="language-javascript line-numbers">
+        if (true)
+          let name = 'Иван'; // <mark class="important">SyntaxError: Unexpected identifier</mark>
+      </code>
+    </pre>
+    <p>Это приведет к синтаксической ошибке. Но если обернуть в фигурные скобки, то все ок:</p>
+    <pre>
+      <code class="language-javascript line-numbers">
+        if (true) {
+          let name = 'Иван';
+        }
+      </code>
+    </pre>
+  </section>
+  <section class="slide">
+    <h2>Особенности <code>let</code></h2>
+    <ul>
+      <li>Переменные объявленные через <code>let</code> живут только внутри блока между <code>{</code> и <code>}</code>.</li>
+      <li>Определения цикла <code>for</code> относится к блоку тела цикла.</li>
+      <li>Объявления переменных не всплывают.</li>
+      <li><code>let</code> нельзя использовать вне блока кода в условиях.</li>
+    </ul>
+  </section>
+
+  <section class="slide chapter" id="const">
+    <h2>Константы с <code>const</code></h2>
+  </section>
+  <section class="slide">
+    <h2>Объявляем константы через <code>const</code></h2>
+    <pre>
+      <code class="language-javascript line-numbers">
+        const name = 'Дима';
+        name = 'Ольга'; // <mark class="important">TypeError: Assignment to constant variable.</mark>
+      </code>
+    </pre>
+    <p>
+      При попытке изменить константу возникает ошибка: <mark class="important">TypeError: Assignment to constant variable.</mark>
+    </p>
+  </section>
+  <section class="slide">
+    <h2><code>const</code> не «замораживает» объекты и массивы</h2>
+    <pre>
+      <code class="language-javascript line-numbers">
+        const names = ['Дима', 'Олег', 'Роман'];
+        names.push('Ольга');
+        names.shift();
+        names[1] = 'Рустэм';
+        console.log(names.join(', ')); // <mark>Олег, Рустэм, Ольга</mark>
+      </code>
+    </pre>
+    <p>
+      При попытке изменить элементы массива или свойства объекта, добавить или удалить их, ошибок не возникает.
+    </p>
+  </section>
+  <section class="slide">
+    <h2>Перезапись переменной вызывает ошибку при любом типе данных</h2>
+    <pre>
+      <code class="language-javascript line-numbers">
+        const names = ['Дима', 'Олег', 'Роман'];
+        names = ['Джон', 'Джек', 'Бэн']; // <mark class="important">TypeError: Assignment to constant variable.</mark>
+      </code>
+    </pre>
+    <pre>
+      <code class="language-javascript line-numbers">
+        const CONFIG = {
+          host: 'netology.ru',
+          port: 21
+        }
+        CONFIG.timeout = 24 * 60 * 60;
+        CONFIG = 12; // <mark class="important">TypeError: Assignment to constant variable.</mark>
+      </code>
+    </pre>
+  </section>
+  <section class="slide">
+    <h2>Константы объявленные через <code>const</code> тоже имеют блочную область видимости</h2>
+    <pre>
+      <code class="language-javascript line-numbers">
+        const URL = 'http://netology.ru/';
+        {
+          const URL = 'http://ya.ru';
+        }
+        console.log(URL); // <mark>http://netology.ru/</mark>
+      </code>
+    </pre>
+    <p>
+      Для них характерны все особенности, характерные для <code>let</code>.
+    </p>
+  </section>
+  <section class="slide">
+    <h2>Особенности <code>const</code></h2>
+    <ul>
+      <li>При попытке изменить константу возникает ошибка.</li>
+      <li><code>const</code> не «замораживает» объекты и массивы.</li>
+      <li>При попытке перезаписать переменную возникает ошибка при любом типе данных.</li>
+      <li>Константы объявленные через <code>const</code> тоже имеют блочную область видимости.</li>
+    </ul>
+  </section>
+
+  <section class="slide chapter" id="arrow-func">
+    <h2>Функции-стрелки</h2>
+  </section>
+  <section class="slide">
+    <h2>Функции-стрелки <code>=&gt;</code></h2>
+    <pre>
+      <code class="language-javascript line-numbers">
+        var oddValues = [1, 2, 3, 4]
+          .filter(<mark>function (number) {
+            return number % 2;
+          }</mark>);
+        console.log(oddValues); // [1, 3]
+      </code>
+    </pre>
+    <p>
+      Тот же самый код с помощью функции-стрелки:
+    </p>
+    <pre>
+      <code class="language-javascript line-numbers">
+        var oddValues = [1, 2, 3, 4]
+          .filter(<mark>number => number % 2</mark>);
+        console.log(oddValues); // [1, 3]
+      </code>
+    </pre>
+  </section>
+  <section class="slide">
+    <h2>Несколько аргументов</h2>
+    <p>
+      Заключаем блок аргументов в скобки:
+    </p>
+    <pre>
+      <code class="language-javascript line-numbers">
+        var oddKeys = [1, 2, 3, 4]
+          .filter(<mark>(number, i)</mark> => i % 2);
+        console.log(oddKeys); // [2, 4]
+      </code>
+    </pre>
+    <p>
+      Если аргументов нет, то указывать скобки обязательно:
+    </p>
+    <pre>
+      <code class="language-javascript line-numbers">
+        var allKeys = [1, 2, 3, 4]
+          .filter(<mark>()</mark> => true);
+        console.log(allKeys); // [1, 2, 3, 4]
+      </code>
+    </pre>
+  </section>
+  <section class="slide">
+    <h2>Разширенное тело функции</h2>
+    <p>
+      Заключаем тело функции в фигурные скобки:
+    </p>
+    <pre>
+      <code class="language-javascript line-numbers">
+        var result = [1, 2, 3, 4].map((number, i) => <mark>{
+          if (i % 2 === 0) {
+            return number * 10;
+          }
+          return number;
+        }</mark>);
+        console.log(result); // [10, 2, 30, 4]
+      </code>
+    </pre>
+  </section>
+  <section class="slide">
+    <h2>Функции-стрелки можно создать и сохранить в переменную</h2>
+    <pre>
+      <code class="language-javascript line-numbers">
+        var diff = (number, i) => {
+          if (i % 2 === 0) {
+            return number * 10;
+          }
+          return number;
+        };
+        var result = [1, 2, 3, 4].map(diff);
+        console.log(result); // [10, 2, 30, 4]
+      </code>
+    </pre>
+  </section>
+  <section class="slide">
+    <h2>Что будет выведено в консоль?</h2>
+    <pre>
+      <code class="language-javascript line-numbers">
+        var user = {
+          name: 'Иван',
+          showNameDelay: function (delay) {
+            setTimeout(function () {
+              console.log(this.name);
+            }, delay);
+          }
+        }
+        user.showNameDelay(1000); // <mark>???</mark>
+      </code>
+    </pre>
+  </section>
+  <section class="slide">
+    <h2>Это типичная ошибка с контекстом вызова</h2>
+    <pre>
+      <code class="language-javascript line-numbers">
+        var user = {
+          name: 'Иван',
+          showNameDelay: function (delay) {
+            setTimeout(function () {
+              console.log(this.name);
+            }, delay);
+          }
+        }
+        user.showNameDelay(1000); // <mark class="important">undefined</mark>
+      </code>
+    </pre>
+  </section>
+  <section class="slide">
+    <h2>ES5: сохранить <code>this</code> в переменную и использовать замыкание</h2>
+    <pre>
+      <code class="language-javascript line-numbers">
+        var user = {
+          name: 'Иван',
+          showNameDelay: function (delay) {
+            <mark>var self = this;</mark>
+            setTimeout(function () {
+              console.log(<mark>self.name</mark>);
+            }, delay);
+          }
+        }
+        user.showNameDelay(1000); // <mark class="important">Иван</mark>
+      </code>
+    </pre>
+  </section>
+  <section class="slide">
+    <h2>Решение ES2015: использовать фунцию-стрелку</h2>
+    <p>
+      Фунции-стрелки не имеют собственного контекста вызова <code>this</code>, и используют текущий контекст:
+    </p>
+    <pre>
+      <code class="language-javascript line-numbers">
+        var user = {
+          name: 'Иван',
+          showNameDelay: function (delay) {
+            setTimeout(<mark>() => console.log(this.name)</mark>, delay);
+          }
+        }
+        user.showNameDelay(1000); // <mark class="important">Иван</mark>
+      </code>
+    </pre>
+  </section>
+  <section class="slide">
+    <h2>Контекст фиксируется в момент создания и ничем его не изменить</h2>
+    <pre>
+      <code class="language-javascript line-numbers">
+        var user = {
+          name: 'Иван',
+          getGreater: function () {
+            return () => console.log('Привет, %s', this.name);
+          }
+        }
+        var greater = user.getGreater();
+        greater(); // <mark>Привет, Иван</mark>
+        greater.call({ name: 'Мария' }); // <mark>Привет, Иван</mark>
+      </code>
+    </pre>
+  </section>
+  <section class="slide">
+    <h2>Аналогично фиксируются аргументы</h2>
+    <pre>
+      <code class="language-javascript line-numbers">
+        var user = {
+          name: 'Иван',
+          getGreater: function () {
+            return () => console.log(<mark>arguments[0]</mark>, this.name);
+          }
+        }
+        var greater = user.getGreater('%s, добрый день');
+        var greater2 = greater.bind({ name: 'Наталья' });
+        greater2('Прощай, %s'); // <mark>Иван, добрый день</mark>
+        greater.apply({ name: 'Мария' }); // <mark>Иван, добрый день</mark>
+      </code>
+    </pre>
+  </section>
+  <section class="slide">
+    <h2>Особенность функций-стрелок</h2>
+    <ul>
+      <li>Не имеют собственного контекста <code>this</code> и аргументов <code>arguments</code>, используют контекст и аргументы доступные на момент создания. По сути, действует как супер-<code>bind</code>.</li>
+      <li>Более короткая запись<br><code>(аргумент1, аргумент2) => {код с return}</code>.</li>
+      <li>Если аргумент всего один — его можно не брать в скобки.</li>
+      <li>Если тело функции-стрелки простое выражение, то можно не писать фигурные скобки и <code>return</code>.</li>
+    </ul>
+  </section>
+
+  <section class="slide chapter" id="default-args">
+    <h2>Аргументы функции по умолчанию</h2>
+  </section>
+  <section class="slide">
+    <h2>Значения по умолчанию аргументов функции</h2>
+    <pre>
+      <code class="language-javascript line-numbers">
+        function greating(name = 'Гость') {
+          console.log('Привет, %s', name);
+        }
+
+        greating(); // <mark>Привет, Гость</mark>
+        greating(undefined); // <mark>Привет, Гость</mark>
+        greating(null); // <mark>Привет, null</mark>
+        greating('Иван'); // <mark>Привет, Иван</mark>
+      </code>
+    </pre>
+  </section>
+
+  <section class="slide chapter" id="rest">
+    <h2>Объединение параметров</h2>
+  </section>
+  <section class="slide">
+    <h2>Возмедем все аргументы фунции в квадрат и вернем их массив</h2>
+    <pre>
+      <code class="language-javascript line-numbers">
+        function sqr() {
+          return arguments.map(i => i * i);
+        }
+        var result = sqr(2, 3, 4); // <mark class="important">TypeError: arguments.map is not a function</mark>
+        console.log(result);
+      </code>
+    </pre>
+    <p>
+      Объект <code>arguments</code> — не является массивом и не имеет метода <code>map</code>.
+    </p>
+  </section>
+  <section class="slide">
+    <h2>Используем <code>map</code> из прототипа массива для <code>arguments</code>:</h2>
+    <pre>
+      <code class="language-javascript line-numbers">
+        function sqr() {
+          return Array.prototype.map
+            .call(arguments, i => i * i);
+        }
+        var result = sqr(2, 3, 4);
+        console.log(result); // <mark>[4, 9, 16]</mark>
+      </code>
+    </pre>
+    <p>
+      Теперь все работает. Но есть два недостатка. Во-первых, <code>arguments</code> нужно преобразовывать в массив или заимствовать методы массива. Во-вторых, не очевидно что функция вообще принимает параметры.
+    </p>
+  </section>
+  <section class="slide">
+    <h2>Оператор объединения <code>…</code> позволяет собрать все аргументы функции в реальный массив</h2>
+    <pre>
+      <code class="language-javascript line-numbers">
+        function sqr(<mark>...params</mark>) {
+          return params.map(i => i * i);
+        }
+
+        var result = sqr(2, 3, 4);
+        console.log(result); // <mark>[4, 9, 16]</mark>
+      </code>
+    </pre>
+    <p>
+      В отличии от <code>arguments</code>, который массивом не является.
+    </p>
+  </section>
+  <section class="slide">
+    <h2>Оператор объединения <code>…</code> может быть использован только с последним аргументом</h2>
+    <pre>
+      <code class="language-javascript line-numbers">
+        var multer = (multer, ...args) =>
+          args.map(i => multer * i);
+        var bad = (<mark class="important">...data</mark>, template) =>
+          console.log(template, data.join('-'));
+        // <mark class="important">SyntaxError: Rest parameter must be last formal parameter</mark>
+      </code>
+    </pre>
+    <p>
+      Если после объединения добавить еще аргумент, то возникнет синтаксическая ошибка <mark>SyntaxError: Rest parameter must be last formal parameter</mark>
+    </p>
+  </section>
+
+  <section class="slide chapter" id="spread">
+    <h2>Деструктуризация параметров</h2>
+  </section>
+  <section class="slide">
+    <h2>Ищем максимум с использованием <code>apply</code></h2>
+    <pre>
+      <code class="language-javascript line-numbers">
+        var numbers = [92, 13, 47, 120, 3, 69];
+        var maxNumber = Math.max.apply(null, numbers);
+        console.log(maxNumber); // <mark>120</mark>
+      </code>
+    </pre>
+    <p>
+      Если мы хотим передать в функцию с переменным числом аргументов массив, то единственный способ был использовать метод функции <code>apply</code>, который принимал вторым аргументом массив аргументов для вызываемой функции.
+    </p>
+  </section>
+  <section class="slide">
+    <h2>Оператор деструктуризации <code>…</code> позволяет разбить массив и добавить как аргументы</h2>
+    <pre>
+      <code class="language-javascript line-numbers">
+        var numbers = [92, 13, 47, 120, 3, 69];
+        var maxNumber = Math.max(...numbers);
+        console.log(maxNumber); // <mark>120</mark>
+      </code>
+    </pre>
+    <p>
+      Если после объединения добавить еще аргумент, то возникнет синтаксическая ошибка <mark>SyntaxError: Rest parameter must be last formal parameter</mark>
+    </p>
+  </section>
+
+  <section class="slide chapter" id="destructuring">
+    <h2>Оператор деструктуризации</h2>
+  </section>
+  <section class="slide">
+    <h2>Деструктуризация массивов</h2>
+    <p>
+      Используя оператор присвоения можно легко получить значения элементов массива в переменные:
+    </p>
+    <pre>
+      <code class="language-javascript line-numbers">
+        let info = ['Иван', 32, 'Уфа'];
+        <mark>let [name, age, city] = info;</mark>
+        console.log(name); // Иван
+        console.log(age); // 32
+        console.log(city); // Уфа
+      </code>
+    </pre>
+  </section>
+  <section class="slide">
+    <h2>Выбираем некоторые элементы массива</h2>
+    <p>
+      Можно пропускать элементы, и использовать оператор объединения:
+    </p>
+    <pre>
+      <code class="language-javascript line-numbers">
+        let numbers = [1, 2, 3, 4, 5, 6];
+        let [one <mark>,,,</mark> four, <mark>...other</mark> ] = numbers;
+        console.log(one); // 1
+        console.log(four); // 4
+        console.log(other); // [5, 6]
+      </code>
+    </pre>
+  </section>
+  <section class="slide">
+    <h2>Деструктуризация объектов</h2>
+    <p>
+      Аналогично и с объектами. Если имена переменных совпадают с ключами:
+    </p>
+    <pre>
+      <code class="language-javascript line-numbers">
+        let info = { name: 'Иван', age: 32, city: 'Уфа' };
+        <mark>let {name, age, city} = info;</mark>
+        console.log(name, age, city); // Иван 32 Уфа
+      </code>
+    </pre>
+  </section>
+  <section class="slide">
+    <h2>Не обязательно брать все свойства</h2>
+    <p>
+      Достаточно чтобы имя переменной совпадало с названием ключа:
+    </p>
+    <pre>
+      <code class="language-javascript line-numbers">
+        let info = { name: 'Иван', age: 32, city: 'Уфа' };
+        <mark>let {city} = info;</mark>
+        <mark>let {name} = info;</mark>
+        console.log(name, city); // Иван, Уфа
+      </code>
+    </pre>
+  </section>
+  <section class="slide">
+    <h2>Деструктуризация объектов в переменные не совпадающие с ключами</h2>
+    <p>
+      Нужно указать ключи, и переменные через <code>:</code>. Все ключи объекта задействовать не обязательно:
+    </p>
+    <pre>
+      <code class="language-javascript line-numbers">
+        let info = { name: 'Иван', age: 32, city: 'Уфа' };
+        <mark>let { name: userName, city: location } = info;</mark>
+        console.log(userName); // Иван
+        console.log(location); // Уфа
+      </code>
+    </pre>
+  </section>
+
+  <section class="slide chapter" id="object-literals">
+    <h2>Объектный литерал</h2>
+  </section>
+  <section class="slide">
+    <h2>Создание свойств из переменных</h2>
+    <pre>
+      <code class="language-javascript line-numbers">
+        let name = 'Николай', age = 21;
+        let user = { name, age, city: 'Москва' };
+        console.log(user.name); // <mark>Николай</mark>
+        console.log(user.age); // <mark>21</mark>
+      </code>
+    </pre>
+    <p>
+      Ранее это нужно было записывать так:
+    </p>
+    <pre>
+      <code class="language-javascript line-numbers">
+        let name = 'Николай', age = 21;
+        let user = { <mark>name: name, age: age</mark> , city: 'Москва' };
+      </code>
+    </pre>
+  </section>
+  <section class="slide">
+    <h2>Возможность определить имена свойств выражением</h2>
+    <pre>
+      <code class="language-javascript line-numbers">
+        let key = 'Location', value = 'Волгоград';
+        let user = {
+          name: 'Мария',
+          <mark>[key.toLowerCase()]</mark> : value,
+          <mark>['user' + key]</mark> : value
+        };
+        console.log(user['location']); // <mark>Волгоград</mark>
+        console.log(user.userLocation); // <mark>Волгоград</mark>
+      </code>
+    </pre>
+  </section>
+  <section class="slide">
+    <h2>Короткая запись для методов объектов</h2>
+    <pre style="font-size: 90%">
+      <code class="language-javascript line-numbers">
+        var user = {
+          show() {
+            console.log(this.name);
+          },
+          name: 'Иван'
+        };
+        user.show(); // <mark>Иван</mark>
+      </code>
+    </pre>
+    <p>Ранее мы записывали это так:</p>
+    <pre style="font-size: 90%">
+      <code class="language-javascript line-numbers">
+        var user = {
+          <mark>show: function () {
+            console.log(this.name);
+          }</mark>,
+          name: 'Иван'
+        };
+      </code>
+    </pre>
+  </section>
+  <section class="slide">
+    <h2>Короткая запись для геттеров и сеттеров</h2>
+    <pre>
+      <code class="language-javascript line-numbers">
+        var user = {
+          name: 'Иван',
+          yob: 1987,
+          <mark>set age(age)</mark> {
+            const now = new Date();
+            this.yob = now.getFullYear() - age;
+          },
+        }
+        user.age = 67;
+        console.log(user.yob); // <mark>1949</mark>
+      </code>
+    </pre>
+  </section>
+
+  <section class="slide chapter">
+    <h2>«Классы» в JS</h2>
+  </section>
+  <section class="slide">
+    <h2>JavaScript — прототипно-ориентированный язык программирования</h2>
+    <ul>
+      <li>В JS нет классических классов и классического наследования</li>
+      <li>И они не появились в с выходом ES2016</li>
+      <li>Объекты получают свойства и методы прототипа из свойства <code>__proto__</code>, как и раньше.</li>
+      <li>Для создания объекта с заранее описанными возможностями нужно создать конструктор (функция) и прототип (свойство <code>prototype</code> конструктора)</li>
+      <li>Для носледования нужно чтобы прототип потомка имел в качестве прототипа предка</li>
+    </ul>
+  </section>
+  <section class="slide">
+    <h2>Внешне все похоже на ООП</h2>
+    <p>Создаем фигуру, перемещаем, выводим координаты:</p>
+    <pre>
+      <code class="language-javascript line-numbers">
+        var figure = new Shape(100, 100);
+        figure.move(50, 70);
+
+        console.log(figure.x, figure.y); // <mark>150, 170</mark>
+      </code>
+    </pre>
+  </section>
+  <section class="slide">
+    <h2>«Классы» в ES5</h2>
+    <p>Создаем конструктор <code>Shape</code>, определяем метод <code>move</code> в прототипе <code>Shape.prototype</code>.</p>
+    <pre>
+      <code class="language-javascript line-numbers">
+        function Shape(x, y) {
+          this.x = x;
+          this.y = y;
+        }
+
+        Shape.prototype.move = function (dx, dy) {
+          this.x += dx;
+          this.y += dy;
+        };
+      </code>
+    </pre>
+    <p>И наш пример работает. Но никаких классов. Это просто функции, объекты, свойства и контекст вызова <code>this</code>.</p>
+  </section>
+  <section class="slide" id="class">
+    <h2>«Классы» в ES2015 — cинтаксический сахар</h2>
+    <pre>
+      <code class="language-javascript line-numbers">
+        class Shape {
+          constructor(x, y) {
+            this.x = x;
+            this.y = y;
+          }
+          move(dx = 0, dy = 0) {
+            this.x += dx;
+            this.y += dy;
+          }
+        }
+      </code>
+    </pre>
+    <p>Наконец-то! Классы! Конструктор! Метод!</p>
+  </section>
+  <section class="slide">
+    <h2>Но никаких классов нет</h2>
+    <p>
+      Это всё те же функции, объекты, свойства и контекст вызова.
+    </p>
+    <pre>
+      <code class="language-javascript line-numbers">
+        class Shape {
+          //…
+        }
+
+        console.log(Shape); // <mark>[Function: Shape]</mark>
+        console.log(Shape.prototype); <mark>Shape {}</mark>
+        console.log(Shape.prototype.move); <mark>function move(dx = 0, dy = 0) {}</mark>
+      </code>
+    </pre>
+    <p>Но запись явно аккуратнее и нагляднее.</p>
+  </section>
+  <section class="slide">
+    <h2>Создадим еще круг, который тоже можно двигать</h2>
+    <p>Создаем круг, перемещаем, выводим координаты и площадь:</p>
+    <pre>
+      <code class="language-javascript line-numbers">
+        var figure = new Shape(100, 100);
+        figure.move(50, 70);
+
+        var circle = new Circle(50, 50, 10);
+        circle.move(20, 10);
+        console.log(circle.x, circle.y); // <mark>70, 60</mark>
+        console.log(circle.squere()); // <mark>314.1592653589793</mark>
+      </code>
+    </pre>
+  </section>
+  <section class="slide">
+    <h2>Наследуем в ES5</h2>
+    <p>«Боже, что это за странные заклинания?!»</p>
+    <pre>
+      <code class="language-javascript line-numbers">
+        function Cirle(x, y, radius) {
+          Shape.call(this, x, y);
+          this.radius = radius;
+        }
+        Cirle.prototype = Object.create(Shape.prototype);
+        Cirle.prototype.constructor = Cirle;
+        Cirle.prototype.squere = function () {
+          return this.radius * this.radius * Math.PI;
+        }
+      </code>
+    </pre>
+    <p>Это прототипное наследование! Но как это работает?</p>
+  </section>
+  <section class="slide">
+    <h2>Как работает прототипное наследование</h2>
+    <ol>
+      <li>Если в объекте <code>circle</code> нет нужного свойства, то оно ищется в объекте <code>circle.__proto__</code>.</li>
+      <li>А что там? А там ссылка на <code>Circle.prototype</code>.</li>
+      <li>Так мы можем получить <code>squere</code>, но не <code>move</code>.</li>
+      <li>Тогда отправляемся искать куда? Опять в <code>obj.__proto__.__proto__</code>, что эквивалентно <code>Circle.prototype.__proto__</code>.</li>
+      <li>А там что? А там ссылка на <code>Shape.prototype</code>.</li>
+      <li>Почему? Потому что <code>Object.create</code> создает объект, в свойстве <code>__proto__</code> которого будет переданный объект, а мы передали <code>Shape.prototype</code>.</li>
+    </ol>
+  </section>
+  <section class="slide">
+    <h2>Наследование «классов» в ES2015</h2>
+    <p>В ES2015 кроме <code>class</code> появились еще операторы <code>extends</code> и <code>super</code>.</p>
+    <pre>
+      <code class="language-javascript line-numbers">
+        class Circle extends Shape {
+          constructor(x, y, radius) {
+            super(x, y);
+            this.radius = radius;
+          }
+          squere() {
+            return this.radius * this.radius * Math.PI;
+          }
+        }
+      </code>
+    </pre>
+    <p>Но не дайте себя обмануть. Это все еще прототипы и прототипное наследование.</p>
+  </section>
+  <section class="slide">
+    <h2>Наследование это тоже синтаксический сахар</h2>
+    <p>Хоть и очень сладкий</p>
+    <pre>
+      <code class="language-javascript line-numbers">
+        class Circle extends Shape {
+          // …
+        }
+
+        console.log(
+          Circle.prototype.__proto__ === Shape.prototype
+        ); // <mark>true</mark>
+      </code>
+    </pre>
+  </section>
+  <section class="slide">
+    <h2>Геттеры и сеттеры в «классах»</h2>
+    <p>Создаются так же как объектных литералах:</p>
+    <pre>
+      <code class="language-javascript line-numbers">
+        class Circle extends Shape {
+          constructor(x, y, radius) {
+            super(x, y);
+            this.radius = radius;
+          }
+          <mark>get</mark> squere() {
+            return this.radius * this.radius * Math.PI;
+          }
+        }
+
+        var circle = new Circle(50, 50, 10);
+        console.log(<mark>circle.squere</mark>); // <mark>314.1592653589793</mark>
+      </code>
+    </pre>
+  </section>
+  <section class="slide">
+    <h2>Статические методы в «классах»</h2>
+    <p>Создаются добавлением ключевого слова <code>static</code>:</p>
+    <pre>
+      <code class="language-javascript line-numbers">
+        class Shape {
+          // …
+          static create(...args) {
+            return new Shape(...args);
+          }
+        }
+
+        var circle = Shape.create(50, 50);
+        console.log(Shape.create); // <mark>function create(...args) {}</mark>
+      </code>
+    </pre>
+  </section>
+
+  <section class="slide chapter">
+    <h2>Прочее</h2>
+  </section>
+  <section class="slide" id="templates">
+    <h2>Строковые шаблоны</h2>
+    <p>
+      С использованием кавычек <code>``</code> теперь можно подставлять значения переменных в строки.
+    </p>
+    <pre>
+      <code class="language-javascript line-numbers">
+        var name = 'Георгий', email = 'georg@test.co';
+        console.log(`Привет, ${name}! Чем могу помочь?`);
+        console.log(`Письмо отправлено по адресу ${email}.`);
+      </code>
+    </pre>
+    <p>Теперь можно устроить PHP внутри JS 🤖</p>
+  </section>
+  <section class="slide" id="for-of">
+    <h2>Перебор итерируемых элементов с помощью <code>for … of</code></h2>
+    <pre>
+      <code class="language-javascript line-numbers">
+        const names = ['Борис', 'Олег', 'Никита'];
+        names._hiddenParam = 42;
+        for (let name of names) {
+          console.log(<mark>name</mark>); // Борис, Олег, Никита
+        }
+        for (let i in names) {
+          console.log(<mark>names[i]</mark>); // Борис, Олег, Никита, <mark class="important">42</mark>
+        }
+      </code>
+    </pre>
+  </section>
+
+  <section class="slide" id="resources">
+    <h2>Материалы</h2>
+    <ul>
+      <li>Список доступных возможностей ECMAScript в Node.js <a href="http://node.green">node.green</a>.</li>
+      <li>Раздел <a href="https://learn.javascript.ru/es-modern">Современные возможности ES-2015</a> в учебнике на javascript.ru</li>
+      <li>Статья <a href="https://github.com/metagrover/ES6-for-humans">ES6 простым человеческим языком</a> и её <a href="https://habrahabr.ru/post/305900/">перевод на хабре</a>.</li>
+      <li>Серия статей <a href="https://ponyfoo.com/articles/tagged/es6-in-depth">ES6 изнутри</a> и их <a href="http://css-live.ru/?s=es6%3A&searchsubmit=U">перевод на css-live.ru</a>.</li>
+    </ul>
+  </section>
+
+  <section class="slide chapter" id="homework">
+    <h2>Домашнее задание</h2>
+  </section>
+  <section class="slide">
+    <h2>Часть 1</h2>
+    <p>
+      В задании необходимо использовать возможности ES2015 по максимуму.
+    </p>
+    <ul>
+      <li>Создать класс <code>Pokemon</code>, конструктор которого принимает имя и уровень в качестве аргумента. Все экземпляры этого класса должны иметь общий метод <code>show</code>, который выводит информацию о покемоне.</li>
+      <li>Создать класс <code>PokemonList</code>, который в качестве аргументов принимает любое количество покемонов. Экземпляры этого класса должны обладать всеми функциями массива. А так же иметь метод <code>add</code>, который принимает в качестве аргументов имя и уровень, создает нового покемона и добавляет его в список.</li>
+    </ul>
+  </section>
+  <section class="slide">
+    <h2>Часть 2</h2>
+    <ul>
+      <li>Создать два списка покемонов и сохранить их в переменных <code>lost</code> и <code>found</code>. Имена и уровни придумайте самостоятельно.</li>
+      <li>Добавить несколько новых покемонов в каждый список.</li>
+      <li>Добавить спискам покемонов метод <code>show</code>, который выводит информацию о покемонах и их общее количество в списке.</li>
+      <li>Перевести одного из покемонов из списка <code>lost</code> в список <code>found</code></li>
+    </ul>
+  </section>
+  <section class="slide">
+    <h2>На зачет с отличием</h2>
+    <ul>
+      <li>Добавить спискам покемонов метод <code>max</code>, который возвращает покемона максимального уровня.</li>
+      <li>Переопределите и используйте метод <code>valueOf</code> у покемонов, для решения этой задачи.</li>
+    </ul>
+  </section>
+  <section class="slide">
+    <h2>Как предоставить код домашней работы на проверку</h2>
+    <p>
+      Способы предоставить домашнее задание в порядке приоритета:
+    </p>
+    <ol>
+      <li>Исходный код на <a href="https://bitbucket.org/">BitBucket</a> или <a href="https://github.com/">GitHub</a></li>
+      <li>Код в песочнице <a href="http://codepen.io/">CodePen</a> или <a href="https://jsfiddle.net/">JSFiddle</a></li>
+    </ol>
+    <p>
+      Не смогу проверить и помочь если прислать:
+    </p>
+    <ul>
+      <li>Архивы, особенно RAR</li>
+      <li>Скриншоты кода</li>
+      <li>Теоретический рассказ о возникших проблемах</li>
+    </ul>
+  </section>
+
+  <section class="slide last">
+    <p class="thanx">Задавайте вопросы и напишите отзыв о лекции!</p>
+    <address>Дима Фитискин</address>
+    <ul class="contacts">
+      <li><a href="mailto:dfitiskin@gmail.ru"><i class="fa fa-envelope-o" aria-hidden="true"></i>dfitiskin@gmail.ru</a></li>
+      <li><a href="skype:dfitiskin?call"><i class="fa fa-skype" aria-hidden="true"></i>dfitiskin</a></li>
+      <li><a href="https://fb.me/dfitiskin"><i class="fa fa-facebook" aria-hidden="true"></i>fb.me/dfitiskin</a></li>
+    </ul>
+  </section>
+
+
+
+  <div class="progress"></div>
+  <script src="node_modules/shower-core/shower.min.js"></script>
+  <script src="js/prism.js?v=2"></script>
+  <script src="https://use.fontawesome.com/30b5a52164.js"></script>
+</body>
+</html>

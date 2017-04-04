@@ -32,6 +32,7 @@
     "shower-ribbon": "^2.0.10"
   },
   "devDependencies": {
+    "browser-sync": "^2.13.0",
     "del": "^2.2.1",
     "fs": "0.0.2",
     "gulp": "^3.9.1",
@@ -49,6 +50,6 @@
     "prepare": "gulp prepare",
     "archive": "gulp archive",
     "publish": "gulp publish",
-    "test": "npm run prepare && ls prepared && npm run archive && path-exists archive.zip"
+    "start": "browser-sync start --server --files '*.html' 'css/*.css' 'js/*.js'"
   }
 }
