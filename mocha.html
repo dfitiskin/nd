@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <title>Тестируем сервер c&nbsp;Mocha</title>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="node_modules/shower-ribbon/styles/screen-4x3.css">
+    <link rel="stylesheet" href="css/prism.css">
+    <link rel="stylesheet" href="css/prism-fix.css">
+    <link rel="stylesheet" href="css/netology.css">
+  </head>
+  <body class="shower">
+    <header class="caption">
+      <h1>Тестируем сервер c&nbsp;Mocha</h1>
+      <p>Дима Фитискин, Нетология</p>
+    </header>
+
+    <section class="slide" id="cover">
+      <h2>Тестируем сервер c&nbsp;Mocha</h2>
+      <p>
+        <img src="i/dfitiskin.jpg" alt="" class="avatar">
+        Дима Фитискин <span class="position">Нетология</span>
+      </p>
+    </section>
+
+    <section class="slide author" id="author">
+      <img src="i/dfitiskin.jpg" alt="">
+      <h1>Дима Фитискин</h1>
+      <p class="position">Руковожу курсами по программированию в Нетологии</p>
+      <ul class="contacts">
+        <li><a href="mailto:dfitiskin@gmail.ru"><i class="fa fa-envelope-o" aria-hidden="true"></i>dfitiskin@gmail.ru</a></li>
+        <li><a href="skype:dfitiskin?call"><i class="fa fa-skype" aria-hidden="true"></i>dfitiskin</a></li>
+        <li><a href="https://fb.me/dfitiskin"><i class="fa fa-facebook" aria-hidden="true"></i>fb.me/dfitiskin</a></li>
+      </ul>
+    </section>
+
+    <section class="slide chapter" style="background-image: url(./pic/mocha/crash.png); background-size: cover">
+      <h2 style="color: white">Зачем тестировать?</h2>
+    </section>
+
+    <section class="slide" style="background-image: url(./pic/mocha/fear.png); background-size: cover">
+      <h2 style="color: white">Страх</h2>
+    </section>
+
+    <section class="slide" style="background-image: url(./pic/mocha/other.png); background-size: cover">
+      <h2 style="color: white">Другой парень</h2>
+    </section>
+
+    <section class="slide">
+      <h2>Обратная связь</h2>
+      <img src="./pic/mocha/feedback.png" alt="" class="cover">
+    </section>
+
+    <section class="slide" style="background-image: url(./pic/mocha/docs.jpeg); background-size: cover">
+      <h2 style="color: white">Документация</h2>
+    </section>
+
+    <section class="slide">
+      <h2>Рефакторинг</h2>
+      <img src="./pic/mocha/refactoring.png" alt="" class="cover">
+    </section>
+
+    <section class="slide" style="background-image: url(./pic/mocha/monkey-pattern.jpg); background-size: cover; background-position: center;">
+      <h2 style="color: white;">Автоматизация</h2>
+      <p class="place bottom" style="color: white; padding-bottom: 1em;">Если люди делают работу, которую могут делать компьютеры, то компьютеры собираются по ночам и смеются :)</p>
+    </section>
+
+    <section class="slide chapter">
+      <h2>Организация тестирования</h2>
+    </section>
+
+    <section class="slide">
+      <h2>Хороший тест</h2>
+      <ul>
+        <li>Понятный</li>
+        <li>Быстрый</li>
+        <li>Независимый (окружение, порядок, ...)</li>
+        <li>Вызывает доверие</li>
+        <li>Проверяет что-то одно</li>
+      </ul>
+    </section>
+
+    <section class="slide">
+      <h2>Именование тестов</h2>
+      <ul>
+        <li>По событиям «Когда …» <code>When*</code>: <code>WhenAuthorizeUser</code>, <code>WhenLoadColorPallete</code>.</li>
+        <li>По требованиям «… должен» <code>*Should</code>: <code>UserServiceShould</code>, <code>LoginPageShould</code>.</li>
+        <li>«Тесты для …» <code>*Tests</code>: <code>UserServiceTests</code>, <code>LoginPageTests</code>.</li>
+        <li>«Спецификация для …» <code>*Spec</code>: <code>UserServiceSpec</code>, <code>LoginPageSpec</code>.</li>
+      </ul>
+    </section>
+
+    <section class="slide">
+      <h2>Структура теста</h2>
+      <ul>
+        <li>AAA (Arrange, Act, Assert) — подготовка, действие, проверка.</li>
+        <li>GWT (Giwen, When, Then) — дано, когда, тогда.</li>
+      </ul>
+    </section>
+
+    <section class="slide">
+      <h2>Соотношение количества тестов в проекте</h2>
+      <img src="./pic/mocha/testing-pyramid.png" alt="Пирамида тестов" width="90%">
+    </section>
+
+    <section class="slide chapter">
+      <h2>Установка и настройка Mocha</h2>
+    </section>
+
+    <section class="slide">
+      <h2>Создаем NPM проект</h2>
+      <pre>
+        <code class="language-markup">
+          $ <mark>npm init -y</mark>
+          Wrote to /path/to/test-project/package.json:
+
+          {
+            "name": "test-project",
+            "version": "1.0.0",
+            "scripts": {
+              "test": "echo \"Error: no test specified\" && exit 1"
+            },
+          }
+        </code>
+      </pre>
+    </section>
+
+    <section class="slide">
+      <h2>Устанавливаем Mocha</h2>
+      <p>Более полно команда выглядит так <code>npm&nbsp;install&nbsp;<nobr>--save-dev</nobr>&nbsp;mocha</code>, но я использую короткий вариант:</p>
+      <pre>
+        <code class="language-markup">
+          $ <mark>npm i -D mocha</mark>
+          test-project@1.0.0 /path/to/test-project
+          └─┬ mocha@3.2.0
+            ├ …
+            └─┬ supports-color@3.1.2
+              └── has-flag@1.0.0
+        </code>
+      </pre>
+
+      <p>Тут:</p>
+      <dl>
+        <dt><code>i</code></dt>
+        <dd>сокращение от <code>install</code></dd>
+        <dt><code>-D</code></dt>
+        <dd>сокращение от <code>--save-dev</code></dd>
+      </dl>
+    </section>
+
+    <section class="slide">
+      <h2>Файл проекта</h2>
+      <p>Файл <code>package.json</code> выглядит так:</p>
+      <pre>
+        <code class="language-json line-numbers">
+        {
+          "name": "test-project",
+          "version": "1.0.0",
+          "scripts": {
+            "test": "echo \"Error: no test specified\" && exit 1"
+          },
+          <mark>"devDependencies": {
+            "mocha": "^3.2.0"
+          }</mark>
+        }
+        </code>
+      </pre>
+    </section>
+
+    <section class="slide">
+      <h2>Настроим запуск тестов из NPM</h2>
+      <p>Физически скрипт <code>mocha</code> которым мы будем запускать тесты лежит в папке <code>./node_modules/.bin/mocha</code>. Но если мы будем вызывать его из npm-скрипта, то NPM сам с этим разберется:</p>
+      <pre>
+        <code class="language-json line-numbers">
+        {
+          "name": "test-project",
+          "version": "1.0.0",
+          "scripts": {
+            "test": <mark>"mocha"</mark>
+          },
+          "devDependencies": {
+            "mocha": "^3.2.0"
+          }
+        }
+        </code>
+      </pre>
+    </section>
+
+    <section class="slide">
+      <h2>Проверяем что всё настроено верно</h2>
+      <p>Mocha вызывается, и возвращает ошибку. Это нормально. Особенно если прочить причину ошибки:</p>
+      <pre>
+        <code class="language-markup">
+          $ <mark>npm test</mark>
+
+          > test-project@1.0.0 test /path/to/test-project
+          > mocha
+
+          Warning: Could not find any test files matching pattern: test
+          <mark class="important">No test files found</mark>
+          npm ERR! Test failed.  See above for more details.
+        </code>
+      </pre>
+      <p><mark>Нет файлов с тестами</mark> — оно и логично, мы их еще не создавали.</p>
+    </section>
+
+    <section class="slide">
+      <h2>Создаем папку с тестами</h2>
+      <p>По умолчанию Mocha ищет тесты в папке <code>test</code>. Это можно настраивать, но в данный момент нас это устраивает:</p>
+      <pre>
+        <code class="language-markup">
+          $ mkdir test
+          $ cd test
+        </code>
+      </pre>
+      <p>В папке <code>test</code> мы можем просто создавать файлы с тестами. Когда тестов много, мы можем разложить их по подпапкам. Mocha сама найдет все файлы в папке <code>test</code> и выполнит их.</p>
+    </section>
+
+    <section class="slide">
+      <h2>Создаем первый тест</h2>
+      <p>Тест это просто код на JavaScript, который выполнится в окружении Mocha. Поэтому там доступно некоторые команды:</p>
+      <pre>
+        <code class="language-javascript line-numbers">
+          describe('Тест теста', () => {
+            it('должен проходить', () => {});
+
+            it('должен завалиться', () => {
+              throw new Error('Потому что так и задумано!');
+            });
+          });
+        </code>
+      </pre>
+      <dl>
+        <dt><code>describe</code></dt>
+        <dd>создает группу тестов, группы можно вкладывать в группы.</dd>
+        <dt><code>it</code></dt>
+        <dd>создает один тест, тесты должны быть вложены в группы.</dd>
+      </dl>
+    </section>
+
+    <section class="slide">
+      <h2>Выполняем первые тесты</h2>
+      <pre>
+        <code class="language-markup">
+          $ <mark>npm test</mark>
+          > test-project@1.0.0 test /path/to/test-project
+          > mocha
+
+          Тест теста
+            ✓ должен проходить
+            1) должен завалиться
+
+          1 passing (10ms)
+          1 failing
+
+          1) Тест теста должен завалиться:
+             Error: Потому что так и задумано!
+              at Context.it (test/test.js:7:15)
+        </code>
+      </pre>
+    </section>
+
+    <section class="slide chapter">
+      <h2>Проверки</h2>
+    </section>
+
+    <section class="slide">
+      <h2>Как работает тест</h2>
+      <p>Разберем пример:</p>
+      <pre>
+        <code class="language-javascript line-numbers">
+          it('должен завалиться', () => {
+            throw new Error('Потому что так и задумано!');
+          });
+        </code>
+      </pre>
+      <ol>
+        <li>Выполняется функция.</li>
+        <li>Если функция не вызвала исключений, то тест считается успешным.</li>
+        <li>Если возникает исключение, то тест считается проваленым.</li>
+      </ol>
+    </section>
+
+    <section class="slide">
+      <h2>Как выглядят проверки</h2>
+      <p>Обычно тестируемый код не всегда генерирует исключения, поэтому тесты будет выглядеть как-то так:</p>
+      <pre>
+        <code class="language-javascript line-numbers">
+          it('2 + 2 равно 4', () => {
+            if ( !(2 + 2 === 4) ) {
+              throw new Error('2 + 2 не равно 4!');
+            }
+          });
+        </code>
+      </pre>
+      <p>Вжух! И весь наш код тестов обрастает проверками и выбрасыванием ошибок.</p>
+      <p>Чтобы постоянно не писать <code>if</code> и <code>throw</code> мы можем создать функцию, которая будет это делать за нас. Но такая функция уже есть. Есть даже целые библиотеки.</p>
+    </section>
+
+    <section class="slide">
+      <h2>Библиотеки проверок</h2>
+      <p>Существует множество библиотек-функций, которые что-то проверяют и брасают исключения. Рекомендую использовать одну из этих двух:</p>
+      <ul>
+        <li><a href="https://nodejs.org/dist/latest-v6.x/docs/api/assert.html">Стандартный модуль</a> <code>assert</code> в Node.js</li>
+        <li>
+          <a href="http://chaijs.com">Chai Assertion Library</a> в которой реализовано три варианта для трех разных стилей
+          <ul>
+            <li>Should</li>
+            <li>Expect</li>
+            <li>Assert (совместим с модулем <code>assert</code>) в Node.js</li>
+          </ul>
+        </li>
+      </ul>
+    </section>
+
+    <section class="slide">
+      <h2>Установка</h2>
+      <h3>assert</h3>
+      <p>Установка не требуется</p>
+      <h3>chai</h3>
+      <pre>
+        <code class="language-markup">
+          $ <mark>npm i -D chai</mark>
+          test-project@1.0.0 /path/to/test-project
+          └─┬ chai@3.5.0
+            ├── assertion-error@1.0.2
+            ├─┬ deep-eql@0.1.3
+            │ └── type-detect@0.1.1
+            └── type-detect@1.0.0
+        </code>
+      </pre>
+    </section>
+
+    <section class="slide">
+      <h2>Подключение</h2>
+      <h3>assert</h3>
+      <pre>
+        <code class="language-javascript line-numbers">
+          const assert = require('assert');
+        </code>
+      </pre>
+
+      <h3>chai should</h3>
+      <pre>
+        <code class="language-javascript line-numbers">
+          const should = require('chai').should();
+        </code>
+      </pre>
+
+      <h3>chai expect</h3>
+      <pre>
+        <code class="language-javascript line-numbers">
+          const expect = require('chai').expect;
+        </code>
+      </pre>
+
+      <h3>chai assert</h3>
+      <pre>
+        <code class="language-javascript line-numbers">
+          const assert = require('chai').assert;
+        </code>
+      </pre>
+    </section>
+
+    <section class="slide">
+      <h2><code>assert(2 + 2 === 4)</code></h2>
+      <p>Функция <code>assert</code> принимает два аргумента: выражение и текст сообщения об ошибке. Если выражение будет равно <code>false</code>, то бросается исключение.</p>
+      <pre>
+        <code class="language-javascript line-numbers">
+          it('2 + 2 равно 4', () => {
+            assert(2 + 2 === 4, '2 + 2 не равно 4!');
+          });
+        </code>
+      </pre>
+      <p>Кроме этого у <code>assert</code> есть методы:</p>
+      <dl>
+        <dt><code>equal</code></dt>
+        <dd>сравнение двух значений.</dd>
+        <dt><code>deepEqual</code></dt>
+        <dd>глубокое сравнение двух объектов.</dd>
+        <dt><code>throws</code></dt>
+        <dd>проверка что функция бросит исключение.</dd>
+      </dl>
+      <p>И другие.</p>
+    </section>
+
+    <section class="slide">
+      <h2><code>expect(2 + 2)</code></h2>
+      <p>Функция <code>expect</code> принимает выражение и текст сообщения. И возвращает объект.</p>
+      <pre>
+        <code class="language-javascript line-numbers">
+          it('2 + 2 равно 4', () => {
+            expect(2 + 2, '2 + 2 не равно 4!').to.equal(4);
+          });
+        </code>
+      </pre>
+      <p>Имеет ряд свойств для формирования «фраз»: <code>to</code>, <code>be</code>, <code>is</code>, <code>that</code>, <code>which</code>, <code>has</code>, <code>have</code>, <code>with</code> и другие. А так же проверки:</p>
+      <dl>
+        <dt><code>eql</code></dt>
+        <dd>глубокое сравнение.</dd>
+        <dt><code>instanceof</code></dt>
+        <dd>является экземпляром.</dd>
+        <dt><code>property</code></dt>
+        <dd>проверка наличия свойства и его значения.</dd>
+        <dt><code>keys</code></dt>
+        <dd>наличие ключей.</dd>
+      </dl>
+
+    </section>
+
+    <section class="slide">
+      <h2><code>(2 + 2).should</code></h2>
+      <p>Меняет <code>Object.prototype</code>, добавляя туда свойство <code>should</code>. В нем такой же объект, как и тот что возвращает функция <code>expect</code>.</p>
+      <pre>
+        <code class="language-javascript line-numbers">
+          it('2 + 2 равно 4', () => {
+            (2 + 2).should.equal(4, '2 + 2 не равно 4!');
+          });
+        </code>
+      </pre>
+      <dl>
+        <dt><code>a</code></dt>
+        <dd>проверка типа.</dd>
+        <dt><code>include</code></dt>
+        <dd>вхождение значение в массив.</dd>
+        <dt><code>ok</code></dt>
+        <dd>проверяет что результат приводится к истине.</dd>
+        <dt><code>equal</code></dt>
+        <dd>строгое сравнение.</dd>
+        <dt><code>throw</code></dt>
+        <dd>бросает исключение.</dd>
+      </dl>
+    </section>
+
+    <section class="slide chapter">
+      <h2>Тестирование синхронного кода</h2>
+    </section>
+
+    <section class="slide">
+      <h2>Общий подход к тестированию</h2>
+      <ol>
+        <li>Создать файл для набора кейсов в папке <code>test</code></li>
+        <li>Подключаем библиотеку для проверок.</li>
+        <li>Подключаем тестируемый модуль.</li>
+        <li>Определяем что тестировать.</li>
+        <li>Определяем как тестировать.</li>
+        <li>Описываем тестовый случай.</li>
+        <li>Запускаем проверку.</li>
+        <li>Тест сработал, переходим к следующему.</li>
+      </ol>
+      <p>Потренироваться можно на системных функциях. Например на коллекции <code>Math</code>.</p>
+    </section>
+
+    <section class="slide">
+      <h2>Исследуем <code>Math.max</code></h2>
+      <p><code>Math.max</code> принимает несколько аргументов и возвращает наибольшее из них.</p>
+      <p>Что тут можно проверить?</p>
+      <ul>
+        <li>Передать два числа и убедиться что вернет наибольшее.</li>
+        <li>Что будет если передать один аргумент?</li>
+        <li>Что будет если передать две строки?</li>
+        <li>Что будет если вызвать без аргументов?</li>
+      </ul>
+    </section>
+
+    <section class="slide">
+      <h2>Создадим файл для набора тестов</h2>
+      <p>Создаем в папке <code>test</code> файл <code>Math.js</code>:</p>
+      <pre>
+        <code class="language-javascript line-numbers">
+          const expect = require('chai').expect;
+
+          describe('Math', () => {
+
+            describe('.max', () => {
+
+            });
+
+          });
+        </code>
+      </pre>
+    </section>
+
+    <section class="slide">
+      <h2>Основной функционал <code>Math.max</code></h2>
+      <pre>
+        <code class="language-javascript line-numbers">
+          it('вернет наибольшее из двух аргументов', () => {
+            let result = Math.max(42, 99);
+            expect(result).to.equal(99);
+          });
+        </code>
+      </pre>
+    </section>
+
+    <section class="slide">
+      <h2>Что будет если передать один аргумент?</h2>
+      <p>Предположение: <mark>вернет это число</mark>. Тест:</p>
+      <pre>
+        <code class="language-javascript line-numbers">
+          it('вернет то же число, если один аргумент', () => {
+            const number = 42;
+            let result = Math.max(number);
+            expect(result).to.equal(number);
+          });
+        </code>
+      </pre>
+    </section>
+
+    <section class="slide">
+      <h2>Что будет если передать две строки?</h2>
+      <p>Предположение: <mark>вернет <code>NaN</code></mark>. Тест:</p>
+      <pre>
+        <code class="language-javascript line-numbers">
+          it('вернет NaN, если передать строки', () => {
+            let result = Math.max('один', 'два');
+            expect(result).to.be.NaN;
+          });
+        </code>
+      </pre>
+    </section>
+
+    <section class="slide">
+      <h2>Что будет если вызвать без аргументов?</h2>
+      <p>Предположение: <mark>вернет -∞</mark>. Тест:</p>
+      <pre>
+        <code class="language-javascript line-numbers">
+          it('вернет -∞, если вызвать без аргументов', () => {
+            let result = Math.max();
+            expect(result).to.equal(Number.NEGATIVE_INFINITY);
+          });
+        </code>
+      </pre>
+    </section>
+
+    <section class="slide">
+      <h2>Тестируем конвертор</h2>
+      <p>Тестируем класс <a href="https://github.com/netology-code/NetologyND.Mocha-Protractor-TDD/blob/master/mocha-testing/src/converter.js">Converter</a>.</p>
+      <p>Класс имеет:</p>
+      <dl>
+        <dt>метод <code>toRGB(hexColor)</code></dt>
+        <dd>Принимает код цвета в формате <code>RRGGBB</code>. Возвращает объект со свойствами <code>red</code>, <code>green</code>, <code>blue</code>, в каждом из которых индекс соответствующего цвета в десятичной системе счисления.</dd>
+      </dl>
+    </section>
+
+    <section class="slide chapter">
+      <h2>DRY тесты</h2>
+    </section>
+
+    <section class="slide">
+      <h2>Принцип DRY</h2>
+      <p><abbr title="Don`t Repeat Yourself">DRY</abbr> — не повторяйся. Если в коде постоянно встречаются повторяющиеся блоки кода, то этот код требует улучшения.</p>
+      <p>Тесты такой же код. И к ним применимы все те же требования. Как сократить дублирование в коде?</p>
+      <ul>
+        <li>Циклы</li>
+        <li>Функции</li>
+        <li>Модули</li>
+      </ul>
+    </section>
+
+    <section class="slide">
+      <h2>Средства «сушки» в Mocha</h2>
+      <ul>
+        <li>Классические средства</li>
+        <li>Хуки</li>
+        <li>Генерация тестов</li>
+      </ul>
+    </section>
+
+    <section class="slide">
+      <h2>Хуки наборы тестов</h2>
+      <dl>
+        <dt><code>before</code></dt>
+        <dd>выполняется <mark>перед</mark> выполнением тестов из набора.</dd>
+        <dt><code>after</code></dt>
+        <dd>выполняется <mark>после</mark> выполнением тестов из набора.</dd>
+        <dt><code>beforeEach</code></dt>
+        <dd>выполняется <mark>перед каждым</mark> тестом из набора.</dd>
+        <dt><code>afterEach</code></dt>
+        <dd>выполняется <mark>после каждого</mark> теста из набора.</dd>
+      </dl>
+    </section>
+
+    <section class="slide">
+      <h2>Пример хука <code>before</code></h2>
+      <pre>
+        <code class="language-javascript line-numbers">
+          describe('Math', () => {
+            describe('.max', () => {
+              let max;
+
+              before(() => {
+                max = Math.max;
+              });
+
+              it('вернет наибольшее из двух аргументов', () => {
+                let result = max(42, 99);
+                expect(result).to.equal(99);
+              });
+            });
+          });
+        </code>
+      </pre>
+    </section>
+
+    <section class="slide">
+      <h2>Генерация тестов</h2>
+      <pre>
+        <code class="language-javascript line-numbers">
+          const expect = require('chai').expect;
+          describe('add()', () => {
+            var tests = [
+              {args: [1, 2],       expected: 3},
+              {args: [1, 2, 3],    expected: 6},
+              {args: [1, 2, 3, 4], expected: 10}
+            ];
+            tests.forEach(test => {
+              it(`correctly adds ${test.args.length} args`, () => {
+                let sum = add(...test.args);
+                expect(sum).to.equal(test.expected);
+              });
+            });
+          });
+        </code>
+      </pre>
+    </section>
+
+    <section class="slide chapter">
+      <h2>Тестирование асинхронного кода</h2>
+    </section>
+
+    <section class="slide">
+      <h2>Асинхронная функция</h2>
+      <p>Асинхронный код отличается от синхронного тем, что результат его выполнения доступен не сразу. Поэтому и проверить его мы сможем не сразу. Но как Mocha поймет что мы всё проверили и можно переходить к следующему тесту?</p>
+      <pre>
+        <code class="language-javascript line-numbers">
+          function getUser(callback) {
+            setTimeout(() => {
+              callback(null, { name: 'Иван', age: 42 });
+            }, 1000);
+          }
+        </code>
+      </pre>
+      <p>Пример асинхронной функций для простоты эмулируем через <code>setTimeout</code>.</p>
+      <p>Как нам проверить что в функцию обратного вызова вернется информация о пользователе?</p>
+    </section>
+
+    <section class="slide">
+      <h2>Для асинхронного кода используем функцию <code>done</code></h2>
+      <p>Функция <code>done</code> сообщает в Mocha что мы проверили все что нужно и можно переходить дальше. Она передаётся в нашу тестирующую функцию в качестве первого аргумента.</p>
+      <pre>
+        <code class="language-javascript line-numbers">
+          it('getUserData()', <mark>done</mark> => {
+            getUser((err, user) => {
+              expect(err).is.null;
+              expect(user).eql({ name: 'Иван', age: 42 });
+              <mark>done();</mark>
+            });
+          });
+        </code>
+      </pre>
+      <p>По умолчанию Mocha ждет <code>2</code> секунды. Но если вдруг нужно больше, задайте нужный таймаут.</p>
+    </section>
+
+    <section class="slide">
+      <h2>Код на промисах</h2>
+      <p>Если же у нас есть функция которая возвращает промис, то тестировать такой код можно так же как и предыдущий пример.</p>
+      <pre>
+        <code class="language-javascript line-numbers">
+          function getUserPromise() {
+            return new Promise((resolve, reject) => {
+              getUser((err, user) => {
+                if (err) {
+                  return reject(err);
+                }
+                resolve(user);
+              });
+            });
+          }
+        </code>
+      </pre>
+      <p>Тут для простоты функция <code>getUserPromise</code> просто оборачивает в промис функцию <code>getUser</code>.</p>
+    </section>
+
+    <section class="slide">
+      <h2>Тестируем промисы</h2>
+      <p>Если вернуть промис из тест-функции, то Mocha дождется когда он разрешится и потом выполнит проверки.</p>
+      <pre>
+        <code class="language-javascript line-numbers">
+          it('getUserPromise()', () => {
+            return getUserPromise().then(data => {
+                expect(user).eql({ name: 'Иван', age: 42 });
+            });
+          });
+        </code>
+      </pre>
+    </section>
+
+    <section class="slide">
+      <h2>Тестируем палитру</h2>
+      <p>Тестируем класс <a href="https://github.com/netology-code/NetologyND.Mocha-Protractor-TDD/blob/master/mocha-testing/src/pallete.js">Pallete</a>.</p>
+      <p>Класс имеет:</p>
+      <dl>
+        <dt>метод <code>getPallete()</code></dt>
+        <dd>Возвращает массив с палитрой синхронно.</dd>
+        <dt>метод <code>getPalleteAsync(callback)</code></dt>
+        <dd>Передаёт массив с палитрой асинхронно в функцию <code>callback</code>.</dd>
+        <dt>метод <code>getPalleteAsyncPromise()</code></dt>
+        <dd>Возвращает промис, который разрешается массивом с палитрой.</dd>
+      </dl>
+    </section>
+
+    <section class="slide chapter">
+      <h2>Управление тестами</h2>
+    </section>
+
+    <section class="slide">
+      <h2>Незаконченные тесты</h2>
+      <p>Если не передать второй аргемент в <code>it</code>, то тест помечается как незаконченный и пропускается:</p>
+      <pre>
+        <code class="language-javascript line-numbers">
+          it('Этот тест еще не готов');
+        </code>
+      </pre>
+    </section>
+
+    <section class="slide">
+      <h2>Пропускаем тесты или целые группы тестов</h2>
+      <p>Аналогичного эффекта можно добиться если вызвать вместо <code>it</code> функцию <code>it.skip</code>:</p>
+      <pre>
+        <code class="language-javascript line-numbers">
+          it.skip('Этот тест будет пропущен', () => {
+            assert(false);
+          });
+        </code>
+      </pre>
+      <p>Такой тест тоже будет пропущен. Таким же способом можно пропустить целый набор тестов:</p>
+      <pre>
+        <code class="language-javascript line-numbers">
+          describe.skip('Все тесты в этом наборе будут пропущены', () => {
+            it('Этот тест будет пропущен', () => {
+              assert(false);
+            });
+          });
+        </code>
+      </pre>
+    </section>
+
+    <section class="slide">
+      <h2>Условный пропуск тестов</h2>
+      <p>Функции которые передаются в <code>it</code> вызываются в контексте объекта теста. И мы можем через <code>this</code> обратиться к методам этого объекта. Например к методу <code>skip</code>.</p>
+      <p><mark class="important">Важно!</mark> Чтобы внутри функции был доступен контекст, не используйте функции стрелки!</p>
+      <p>Если :</p>
+      <pre>
+        <code class="language-javascript line-numbers">
+          it('Медленный тест', function () {
+            if (mode === MODE_FULL) {
+              // Делаем медленный тест
+            } else {
+              this.skip();
+            }
+          });
+        </code>
+      </pre>
+      <p>Аналогично можно пропустить весь набор тестов.</p>
+    </section>
+
+    <section class="slide">
+      <h2>Таймаут и пометка медленных тестов</h2>
+      <p>По умолчанию при наличии асинхронных вызывов Mocha ожидает 2 секунды перед проверкой.</p>
+      <p>Можно установить таймаут для теста или набора тестов. Метод <code>this.timeout(miliseconds)</code> позволяет указать сколько максимум следует ожидать выполнения асинхронного кода.</p>
+      <p>А с помощью метода <code>this.slow(miliseconds)</code> можно задать время выполнения в милисекундах которое будет считаться медленным. Mocha помечает медленный тесты желтой или красной меткой.</p>
+    </section>
+
+    <section class="slide">
+      <h2>Сосредоточиться на одной проблеме</h2>
+      <p>С помощью функции <code>it.only</code> или <code>describe.only</code> можно указать выполнять только этот тест или набор:</p>
+      <pre>
+        <code class="language-javascript line-numbers">
+          it.only('Только этот тест будет выполнен', () => {
+            assert(true);
+          });
+        </code>
+      </pre>
+      <p>Тесты с <code>only</code> не стоит коммитить в репозиторий. Их удобно использовать только для отладки во время работы с кодом.</p>
+      <pre>
+        <code class="language-javascript line-numbers">
+          describe.only('Только тесты в этом наборе будут выполнены', () => {
+            it('Этот тест будет выполнен', () => {
+              assert(true);
+            });
+          });
+        </code>
+      </pre>
+    </section>
+
+    <section class="slide chapter">
+      <h2>Тестирование REST API</h2>
+    </section>
+
+    <section class="slide">
+      <h2>Общий подход к тестированию сервера</h2>
+      <p>Такие тесты относятся к интеграционным тестам.</p>
+      <ol>
+        <li>Запускаем сервер в тестовой среде (база данных, порт)</li>
+        <li>Пишем тест, который делает запрос к серверу.</li>
+        <li>Проверяем полученный ответ сервера.</li>
+      </ol>
+      <p>А еще, они все асинхронные.</p>
+    </section>
+
+    <section class="slide">
+      <h2>Библиотеки для тестирования REST API</h2>
+      <p>Получается, что наши тесты обрастут фунционалом отправки HTTP-запросов, и проверки результатов. Чтобы этого не случилось, тоже есть ряд модулей:</p>
+      <ul>
+        <li><code>supertest</code> — супер-агент для тестирования HTTP-запросов.</li>
+        <li><code>chai-http</code> — плагин, который позволяет тестировать HTTP-запросы в <code>chai</code> нотации.</li>
+      </ul>
+    </section>
+
+    <section class="slide">
+      <h2>Установка <code>supertest</code></h2>
+      <pre>
+        <code class="language-markup">
+          $ <mark>npm i -D supertest</mark>
+          test-project@1.0.0 /path/to/test-project
+          └─┬ supertest@3.0.0
+            ├── methods@1.1.2
+            └─┬ superagent@3.5.0
+              └─┬ readable-stream@2.2.3
+                └── util-deprecate@1.0.2
+        </code>
+      </pre>
+    </section>
+
+    <section class="slide">
+      <h2>Создаем заготовку теста</h2>
+      <pre>
+        <code class="language-javascript line-numbers">
+          const supertest = require('supertest');
+          const expect = require('chai').expect;
+
+          describe('REST API', () => {
+            let server;
+
+            before((done) => {
+              require('../app');
+              setTimeout(() => {
+                server = supertest.agent('http://localhost:3000');
+                done();
+              }, 1000);
+            });
+
+          });
+        </code>
+      </pre>
+    </section>
+
+    <section class="slide">
+      <h2>Тестируем <code>GET /ping</code></h2>
+      <pre>
+        <code class="language-javascript line-numbers">
+          it('GET /ping должен вернуть pong', done => {
+            server
+              .get('/ping')
+              .expect(200)
+              .end((err, response) => {
+                expect(response.body).to.equal('pong');
+                done();
+              });
+          });
+        </code>
+      </pre>
+    </section>
+
+    <section class="slide chapter">
+      <h2>Настройка Mocha</h2>
+    </section>
+
+    <section class="slide">
+      <h2>Ключи запуска</h2>
+      <dl>
+        <dt><code>-b</code>, <code>--bail</code></dt>
+        <dd>запуск с места последнего упавшего теста.</dd>
+        <dt><code>-w</code>, <code>--watch</code></dt>
+        <dd>запуск в режиме наблюдения, тесты автоматически перезапускаются при изменениях.</dd>
+        <dt><code>--use_strict</code></dt>
+        <dd>включить строгий режим соответствия по умолчанию.</dd>
+        <dt><code>-R &lt;name&gt;</code>, <code>--reporter &lt;name&gt;</code></dt>
+        <dd>выбрать формат вывода отчета из множества возможных: <code>dot</code>, <code>nyan</code>, <code>landing</code>, <code>list</code>, <code>progress</code>, <code>json</code>, <code>min</code>, <code>doc</code>, <code>markdown</code> и другие.</dd>
+      </dl>
+    </section>
+
+    <section class="slide">
+      <h2>Файл конфигурации</h2>
+      <p>Чтобы не писать каждый раз нужные опции и не захламлять скрипт в <code>package.json</code> можно поместить все опции в файл <code>./test/mocha.opts</code>:</p>
+      <pre>
+        <code class="language-markup">
+          --require should
+          --reporter dot
+          --ui bdd
+        </code>
+      </pre>
+    </section>
+
+    <section class="slide last">
+      <p class="thanx">Задавайте вопросы и напишите отзыв о лекции!</p>
+      <address>Дима Фитискин</address>
+      <ul class="contacts">
+        <li><a href="mailto:dfitiskin@gmail.ru"><i class="fa fa-envelope-o" aria-hidden="true"></i>dfitiskin@gmail.ru</a></li>
+        <li><a href="skype:dfitiskin?call"><i class="fa fa-skype" aria-hidden="true"></i>dfitiskin</a></li>
+        <li><a href="https://fb.me/dfitiskin"><i class="fa fa-facebook" aria-hidden="true"></i>fb.me/dfitiskin</a></li>
+      </ul>
+    </section>
+
+    <div class="progress"></div>
+    <script src="node_modules/shower-core/shower.min.js"></script>
+    <script src="js/prism.js?v=2"></script>
+    <script src="https://use.fontawesome.com/30b5a52164.js"></script>
+  </body>
+</html>
