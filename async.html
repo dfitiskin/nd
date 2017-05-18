@@ -756,8 +756,11 @@
       function mkdir(dirname){
         return new Promise((done, fail)=>{
           fs.mkdir(dirname, err => {
-            if (err) fail(`Ошибка при создании директории`)
-            else done(dirname)
+            if (err) {
+              fail(err);
+            } else {
+              done(dirname);
+            }
           }
         })
       }
@@ -771,10 +774,13 @@
   <pre>
     <code class="language-javascript line-numbers">
       function writeFile(filepath, data){
-        return new Promise((done, fail)=>{
+        return new Promise((done, fail) => {
           fs.writeFile(filepath, data, opts, err => {
-            if (err) fail(`Ошибка при записи в файл`)
-            else done(`Данные сохранены в файл ${filepath}`)
+            if (err) {
+              fail(err);
+            } else {
+              done(`Данные сохранены в файл ${filepath}`);
+            }
           }
         })
       }
@@ -816,7 +822,7 @@
       mkdir('./data')
        .then(path => mkdir(`${path}/files`))
        .then(path => Promise.all([
-            writeFile(`${path}/file1.txt`, 'Привет птичка!')
+            writeFile(`${path}/file1.txt`, 'Привет птичка!'),
             writeFile(`${path}/file2.txt`, 'Привет рыбка!')
           ]))
        .then(result => console.log(result))
