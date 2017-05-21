@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <title>Karma - Protractor</title>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="node_modules/shower-ribbon/styles/screen-4x3.css">
+  <link rel="stylesheet" href="css/prism.css">
+  <link rel="stylesheet" href="css/prism-fix.css">
+  <link rel="stylesheet" href="css/netology.css">
+</head>
+<body class="shower list">
+<header class="caption">
+  <h1>Работа с файлами</h1>
+  <p>Алексей Кулагин, Нетология</p>
+</header>
+
+<section class="slide" id="cover">
+  <h2>
+    Тестирование клиента
+    <br/>
+    <small>Karma, Protractor</small>
+    <small>Mocha, Jasmine, QUnit</small>
+  </h2>
+  <p>
+    <img src="i/al.qlagin.jpg" alt="" class="avatar">
+    Алексей Кулагин <span class="position">Нетология</span>
+  </p>
+</section>
+<section class="slide author" id="author">
+  <img src="i/al.qlagin.jpg" alt="">
+  <h1>Алексей Кулагин</h1>
+  <ul class="contacts">
+    <li><a href="mailto:al.qlagin@gmail.com"><i class="fa fa-envelope-o" aria-hidden="true"></i>al.qlagin@gmail.com</a>
+    </li>
+    <li><a href="skype:al_qlagin?call"><i class="fa fa-skype" aria-hidden="true"></i>al_qlagin</a></li>
+    <li><a href="https://fb.me/alex.kulagin"><i class="fa fa-facebook" aria-hidden="true"></i>fb.me/alex.kulagin</a>
+    </li>
+  </ul>
+</section>
+
+<section class="slide" id="roadmap">
+  <h2>План занятия</h2>
+  <ol class="">
+    <li><a href="#types">Типы тестов</a></li>
+    <li><a href="#unit">Юнит тесты</a></li>
+    <li><a href="#e2e">Приёмочные тесты</a></li>
+  </ol>
+</section>
+
+<section class="slide chapter" id="types">
+  <h2>Организация тестирования</h2>
+</section>
+<section class="slide">
+  <!--Пирамида-->
+  <h2>Соотношение количества тестов в проекте</h2>
+  <img src="pic/mocha/testing-pyramid.png" width="90%">
+</section>
+<section class="slide chapter" id="unit">
+  <h2>Юнит тесты с Karma</h2>
+</section>
+<section class="slide">
+  <h2>Karma - это...</h2>
+  <p>Karma – инструмент на node.js, позволяющий запускать JavaScript код в нескольких браузерах</p>
+  <img src="pic/karma/law-of-karma.jpg" width="100%">
+</section>
+<section class="slide">
+  <h2>Karma – это не...</h2>
+  <p>Karma – это не фреймворк/библиотека для тестирования, её можно использовать совместно с</p>
+  <ul>
+    <li>Mocha</li>
+    <li>Jasmine</li>
+    <li>QUnit</li>
+    <li>либо же что-то совсем другое, но написав свой адаптер</li>
+  </ul>
+</section>
+<section class="slide">
+  <h2>Браузеры, которые можно использовать</h2>
+  <ul>
+    <li>Chrome and Chrome Canary (npm install karma-chrome-launcher)</li>
+    <li>Firefox (npm install karma-firefox-launcher)</li>
+    <li>Safari (npm install karma-safari-launcher)</li>
+    <li>PhantomJS (npm install karma-phantomjs-launcher)</li>
+    <li>Opera (npm install karma-opera-launcher)</li>
+    <li>IE (npm install karma-ie-launcher)</li>
+    <li>BrowserStack (npm install karma-browserstack-launcher)</li>
+    <li>и многие другие...</li>
+  </ul>
+</section>
+<section class="slide">
+  <pre>
+    <code class="language-javascript line-numbers">
+      angular.module('app', [])
+        .controller("PhoneListController", PhonesController)
+        .service('PhonesService', PhonesService);
+
+      function PhonesController(PhonesService) {
+          this.phonesList = PhonesService.phones;
+          this.add = PhonesService.add;
+      }
+
+      function PhonesService() {
+          this.phones = ["Samsung", "IPhone", "Nokia"];
+      }
+
+      PhonesService.prototype.add = function (model) {
+          if (this.phones.indexOf(model) < 0)
+              this.phones.push(model)
+      }
+    </code>
+  </pre>
+</section>
+<section class="slide">
+  <h2>Что тестировать?</h2>
+  <ul>
+    <li>Модуль</li>
+    <li>Сервис</li>
+    <li>Контроллер</li>
+  </ul>
+</section>
+<section class="slide">
+  <h2>Модуль</h2>
+  <pre>
+    <code class="language-javascript line-numbers">
+      describe("App module", function () {
+        let module;
+        before(function () {
+            module = angular.module("app")
+        });
+        it("should be registered", function () {
+            chai.expect(module).not.equal(null);
+        })
+        describe("dependencies", function(){
+          it("should include app.controllers", function(){
+              chai.expect(module.requires)
+                  .to.include('app.controllers');
+          })
+        })
+      });
+    </code>
+  </pre>
+</section>
+<section class="slide">
+  <h2>Сервис</h2>
+  <pre>
+    <code class="language-javascript">
+      describe('PhoneService', () => {
+        let service;
+        beforeEach(module("app.services"));
+        beforeEach(inject(PhonesService => {
+            service = PhonesService;
+        }));
+        it('should add phone models', () => {
+            service.add('Sony');
+            chai.expect(service.phones).length(4);
+        });
+        it('should not add model presented in list', () => {
+            service.add(service.phones[0]);
+            chai.expect(service.phones).length(3);
+        })
+      });
+    </code>
+  </pre>
+</section>
+<section class="slide">
+  <h2>Контроллер</h2>
+  <pre>
+    <code class="language-javascript">
+      describe("PhonesCtrls", () => {
+        let ctrl, service;
+        beforeEach(module("app"));
+        beforeEach(inject(($controller, PhonesService) => {
+            ctrl = $controller('PhonesCtrl', {PhonesService});
+            service = PhonesService;
+        }));
+        it('should have same phone list as service', () => {
+            chai.expect(ctrl.phones).to.equal(service.phones);
+        })
+        it('should add phone with PhonesService.add', () => {
+            const stub = sinon.stub(service, 'add');
+            ctrl.add("Sony");
+            sinon.assert.calledOnce(stub);
+        });
+      });
+    </code>
+  </pre>
+</section>
+<section class="slide chapter" id="e2e">
+  <h2>End to end - Приёмочные тесты</h2>
+</section>
+<section class="slide">
+  <h2>Protractor</h2>
+  <p>Protractor - это end-to-end фреймворк для AngularJS, который запускает реальный браузер и работает с ним как
+    пользователь</p>
+  <p><img src="pic/karma/protractor-logo-450.png" width="100%"></p>
+</section>
+<section class="slide">
+  <h2>... запускает реальный браузер ...</h2>
+  <p style="padding-top: 130px; text-align: justify">
+    <img style="float: right; margin: -100px 0 0 30px" src="pic/karma/webdriverio.png" width="300">
+    Protractor реализован поверх WebDriverJS, который использует нативные события и специфичные для браузера драйверы
+    для взаимодействия с приложением как это сделал бы пользователь</p>
+</section>
+<section class="slide">
+  <h2>Объект browser</h2>
+  <p>Protractor глобально определяет объект browser, который используется для вызова команд уровня браузера,
+    таких как переход по ссылке с помощью
+    <mark>browser.get</mark>
+  </p>
+</section>
+<section class="slide">
+  <h2>Взаимодействие с элементами</h2>
+  <p>Для взаимодействия с элементами используются глобальные объекты
+    <mark>element</mark>
+    и
+    <mark>by</mark>
+  </p>
+  <p>
+    <mark>element</mark>
+    - функция для поиска HTML элементов. Она возвращает ElementFinder, который может быть использован для взаимодействия
+    с DOM-элементами
+  </p>
+  <p>
+    <mark>by</mark>
+    - предназначен для создания объекта Locator, который описывает как найти элемент
+  </p>
+  <ul class="">
+    <li>
+      <mark>by.model('first')</mark>
+      для поиска
+      <mark>ng-model="first"</mark>
+    </li>
+    <li>
+      <mark>by.id('gobutton')</mark>
+      для поиска по заданному id
+      <mark>&lt;button id="gobutton"&gt;</mark>
+    </li>
+    <li>
+      <mark>by.binding('latest')</mark>
+      для поиска элемента связанного с
+      <mark>{{latest}}</mark>
+    </li>
+    <li>
+      <mark>by.css('btn')</mark>
+      для поиска элемента по классу
+      <mark>&lt;button class="btn"&gt;</mark>
+    </li>
+  </ul>
+</section>
+<section class="slide">
+  <h2>Взаимодействие со списоком элементов</h2>
+  <p>Для поиска набора элементов используется метод <mark>element.all()</mark></p>
+  <ul>
+    <li>Например, для получения списка сторок таблицы выведенных через <nobr>ng-repeat</nobr> <mark>list = element.all(by.repeater('phone in phones'))</mark></li>
+    <li>В этом случае <mark>list</mark> получит дополнительные методы ElementArrayFinder,
+      такие как <mark>list.first()</mark>, <mark>list.last()</mark> и т.п.</li>
+  </ul>
+</section>
+<section class="slide chapter">
+  <h2>Паттерн PageObject</h2>
+</section>
+<section class="slide">
+  <h2>Шаблон PageObject</h2>
+  <p>PageObject - объект скрывающий работу с элементами страницы давая удобное API</p>
+  <ul>
+    <li>Помогает писать более чистые тесты</li>
+    <li>Может быть использован в нескольких тестах</li>
+    <li>При смене разметки страницы изменяется только PageObject, а тесты остаются неизменными</li>
+  </ul>
+</section>
+<section class="slide last">
+  <p class="thanx">Задавайте вопросы и напишите отзыв о лекции!</p>
+  <address>Алексей Кулагин</address>
+  <ul class="contacts">
+    <li><a href="mailto:al.qlagin@gmail.com"><i class="fa fa-envelope-o" aria-hidden="true"></i>al.qlagin@gmail.com</a>
+    </li>
+    <li><a href="skype:al_qlagin?call"><i class="fa fa-skype" aria-hidden="true"></i>al_qlagin</a></li>
+    <li><a href="https://fb.me/alex.kulagin"><i class="fa fa-facebook" aria-hidden="true"></i>fb.me/alex.kulagin</a>
+    </li>
+  </ul>
+</section>
+
+
+<div class="progress"></div>
+<script src="node_modules/shower-core/shower.min.js"></script>
+<script src="js/prism.js?v=2"></script>
+<script src="https://use.fontawesome.com/30b5a52164.js"></script>
+</body>
+</html>
