@@ -46,6 +46,7 @@
     <li><a href="#types">Типы тестов</a></li>
     <li><a href="#unit">Юнит тесты</a></li>
     <li><a href="#e2e">Приёмочные тесты</a></li>
+    <li><a href="#pageobject">Шаблон PageObject</a></li>
   </ol>
 </section>
 
@@ -121,28 +122,36 @@
 </section>
 <section class="slide">
   <h2>Модуль</h2>
+  <p>Нужный нам модуль должен быть подключен</p>
   <pre>
     <code class="language-javascript line-numbers">
       describe("App module", function () {
         let module;
-        before(function () {
+        before(() => {
             module = angular.module("app")
         });
-        it("should be registered", function () {
-            chai.expect(module).not.equal(null);
-        })
-        describe("dependencies", function(){
-          it("should include app.controllers", function(){
-              chai.expect(module.requires)
-                  .to.include('app.controllers');
-          })
-        })
+        ...
       });
     </code>
   </pre>
 </section>
 <section class="slide">
+  <h2>Модуль</h2>
+  <p>... и подключать все необходимые зависимости</p>
+  <pre>
+    <code class="language-javascript line-numbers">
+      describe("dependencies", function(){
+        it("should include app.controllers", function(){
+            const deps = module.requires;
+            <mark>expect(deps).to.include('app.controllers');</mark>
+        })
+      })
+    </code>
+  </pre>
+</section>
+<section class="slide">
   <h2>Сервис</h2>
+  <p>Подключаем модуль <code>app.services</code> и с помощью injector получаем PhonesService</p>
   <pre>
     <code class="language-javascript">
       describe('PhoneService', () => {
@@ -151,40 +160,101 @@
         beforeEach(inject(PhonesService => {
             service = PhonesService;
         }));
-        it('should add phone models', () => {
-            service.add('Sony');
-            chai.expect(service.phones).length(4);
-        });
-        it('should not add model presented in list', () => {
-            service.add(service.phones[0]);
-            chai.expect(service.phones).length(3);
-        })
       });
     </code>
   </pre>
 </section>
 <section class="slide">
+  <h2>Сервис</h2>
+  <p>Позитивный тест: добавили новую модель телефона и убедились что длина списка изменилась</p>
+  <pre>
+    <code class="language-javascript">
+      it('should add phone models', () => {
+          service.add('Sony');
+          chai.expect(service.phones).length(4);
+      });
+    </code>
+  </pre>
+</section>
+<section class="slide">
+  <h2>Сервис</h2>
+  <p>Негативный тест: добавили модель телефона, которая уже есть в списке, и убедились что длина списка не
+    изменилась</p>
+  <pre>
+    <code class="language-javascript">
+      it('should not add model presented in list', () => {
+          service.add(service.phones[0]);
+          chai.expect(service.phones).length(3);
+      })
+    </code>
+  </pre>
+</section>
+<section class="slide">
+  <h2>“Негативное” тестирование</h2>
+  <p><strong>“Негативное” тестирование</strong> – это тестирование на данных или сценариях, которые соответствуют
+    нештатному поведению тестируемой системы – различные сообщения об ошибках, исключительные ситуации, “запредельные”
+    состояния и т.п.
+    Основной целью “негативного” тестирования является проверка устойчивости системы к воздействиям различного рода,
+    валидация неверного набора данных, проверка обработки исключительных ситуаций (как в реализации самих программных
+    алгоритмов, так и в логике бизнес-правил).</p>
+</section>
+<section class="slide">
   <h2>Контроллер</h2>
+  <p>Для тестирования контроллера его нужно подготовить:</p>
+  <ul>
+    <li>В помощью инжектора получить зависимости и
+      <nobr><code>$controller</code> - сервис для создания объекта контроллера</nobr>
+    </li>
+    <li>Создать нужный контроллер
+      <nobr><code>$controller('PhonesCtrl', DIObject)</code></nobr>
+    </li>
+  </ul>
   <pre>
     <code class="language-javascript">
       describe("PhonesCtrls", () => {
         let ctrl, service;
         beforeEach(module("app"));
         beforeEach(inject(($controller, PhonesService) => {
-            ctrl = $controller('PhonesCtrl', {PhonesService});
-            service = PhonesService;
+          ctrl = $controller('PhonesCtrl', {PhonesService});
+          service = PhonesService;
         }));
-        it('should have same phone list as service', () => {
-            chai.expect(ctrl.phones).to.equal(service.phones);
-        })
-        it('should add phone with PhonesService.add', () => {
-            const stub = sinon.stub(service, 'add');
-            ctrl.add("Sony");
-            sinon.assert.calledOnce(stub);
-        });
       });
     </code>
   </pre>
+</section>
+<section class="slide">
+  <h2>Контроллер</h2>
+  <p>Проверяем свойста контроллера, которые могут быть использованы в шаблоне</p>
+  <pre>
+    <code class="language-javascript">
+      it('should have same phone list as service', () => {
+          // в этом случает проверяется равенство по ссылке
+          // ctrl.phones автоматически изменится
+          // вместе с PhonesService.phones
+          chai.expect(ctrl.phones).to.equal(service.phones);
+      })
+    </code>
+  </pre>
+</section>
+<section class="slide">
+  <h2>Контроллер</h2>
+  <p>Проверим методы контроллера, которые могут быть вызваны из шаблона</p>
+  <pre>
+    <code class="language-javascript">
+      it('should add phone with PhonesService.add', () => {
+        // создаём обертку над методом сервиса
+        // ничего не делает, но знает сколько раз вызвали
+        const stub = sinon.stub(service, 'add');
+
+        // выполняем реальное действие в контроллере
+        ctrl.add("Sony");
+        // проверяем что метод сервиса действительно вызван
+        sinon.assert.calledOnce(stub);
+      });
+    </code>
+  </pre>
+  <p>Реальная бизнес-логика должна быть реализована в сервисе. Поэтому нужно проверить, что вызывается соответствующий
+    метод</p>
 </section>
 <section class="slide chapter" id="e2e">
   <h2>End to end - Приёмочные тесты</h2>
@@ -205,59 +275,65 @@
 <section class="slide">
   <h2>Объект browser</h2>
   <p>Protractor глобально определяет объект browser, который используется для вызова команд уровня браузера,
-    таких как переход по ссылке с помощью
-    <mark>browser.get</mark>
+    таких как переход по ссылке с помощью <code>browser.get</code>
   </p>
 </section>
 <section class="slide">
   <h2>Взаимодействие с элементами</h2>
-  <p>Для взаимодействия с элементами используются глобальные объекты
-    <mark>element</mark>
-    и
-    <mark>by</mark>
+  <p>Для взаимодействия с элементами используются глобальные объекты <code>element</code> и <code>by</code>
   </p>
   <p>
-    <mark>element</mark>
-    - функция для поиска HTML элементов. Она возвращает ElementFinder, который может быть использован для взаимодействия
+    <code>element</code> - функция для поиска HTML элементов. Она возвращает ElementFinder, который может быть
+    использован для взаимодействия
     с DOM-элементами
   </p>
   <p>
-    <mark>by</mark>
-    - предназначен для создания объекта Locator, который описывает как найти элемент
+    <code>by</code> - предназначен для создания объекта Locator, который описывает как найти элемент
   </p>
+</section>
+<section class="slide">
+  <h2>Способы поиска локаторов</h2>
+
   <ul class="">
     <li>
-      <mark>by.model('first')</mark>
-      для поиска
-      <mark>ng-model="first"</mark>
+      <code>by.model('first')</code> для поиска
+      <nobr><code>ng-model="first"</code></nobr>
     </li>
     <li>
-      <mark>by.id('gobutton')</mark>
-      для поиска по заданному id
-      <mark>&lt;button id="gobutton"&gt;</mark>
+      <code>by.id('gobutton')</code> для поиска по заданному id
+      <nobr><code>&lt;button id="gobutton"&gt;</code></nobr>
     </li>
     <li>
-      <mark>by.binding('latest')</mark>
-      для поиска элемента связанного с
-      <mark>{{latest}}</mark>
+      <code>by.binding('latest')</code> для поиска элемента связанного с
+      <nobr><code>{{latest}}</code></nobr>
     </li>
     <li>
-      <mark>by.css('btn')</mark>
-      для поиска элемента по классу
-      <mark>&lt;button class="btn"&gt;</mark>
+      <code>by.css('btn')</code> для поиска элемента по классу
+      <nobr><code>&lt;button class="btn"&gt;</code></nobr>
     </li>
   </ul>
 </section>
 <section class="slide">
   <h2>Взаимодействие со списоком элементов</h2>
-  <p>Для поиска набора элементов используется метод <mark>element.all()</mark></p>
+  <p>Для поиска набора элементов используется метод
+    <nobr><code>element.all()</code></nobr>
+  </p>
   <ul>
-    <li>Например, для получения списка сторок таблицы выведенных через <nobr>ng-repeat</nobr> <mark>list = element.all(by.repeater('phone in phones'))</mark></li>
-    <li>В этом случае <mark>list</mark> получит дополнительные методы ElementArrayFinder,
-      такие как <mark>list.first()</mark>, <mark>list.last()</mark> и т.п.</li>
+    <li>Например, для получения списка сторок таблицы выведенных через
+      <code>ng-repeat</code>:
+      <nobr><code>list = element.all(by.repeater('phone in phones'))</code></nobr>
+    </li>
+    <li>В этом случае
+      <nobr><code>list</code></nobr>
+      получит дополнительные методы <code>ElementArrayFinder</code>, такие как
+      <nobr><code>list.first()</code></nobr>
+      ,
+      <nobr><code>list.last()</code></nobr>
+      и т.п.
+    </li>
   </ul>
 </section>
-<section class="slide chapter">
+<section class="slide chapter" id="pageobject">
   <h2>Паттерн PageObject</h2>
 </section>
 <section class="slide">
@@ -268,6 +344,63 @@
     <li>Может быть использован в нескольких тестах</li>
     <li>При смене разметки страницы изменяется только PageObject, а тесты остаются неизменными</li>
   </ul>
+</section>
+<section class="slide">
+  <h2>Шаблон PageObject</h2>
+  <p>До использвания PageObject взаимодействие с элементами происходит в тесте</p>
+  <pre>
+    <code class="language-javascript">
+      describe('angularjs homepage', function() {
+        it('should greet the named user', function() {
+          browser.get('http://www.angularjs.org');
+          element(by.model('yourName')).sendKeys('Julie');
+          var greeting = element(by.binding('yourName'));
+          expect(greeting.getText()).toEqual('Hello Julie!');
+        });
+      });
+    </code>
+  </pre>
+</section>
+<section class="slide">
+  <h2>Шаблон PageObject</h2>
+  <p>Скрываем детали работы с элементами страницы в <code>AngularHomepage</code></p>
+  <pre>
+    <code class="language-javascript">
+      var AngularHomepage = function() {
+        var nameInput = element(by.model('yourName'));
+        var greeting = element(by.binding('yourName'));
+        this.get = function() {
+          browser.get('http://www.angularjs.org');
+        };
+        this.setName = function(name) {
+          nameInput.sendKeys(name);
+        };
+        this.getGreeting = function() {
+          return greeting.getText();
+        };
+      };
+    </code>
+  </pre>
+</section>
+<section class="slide">
+  <h2>Шаблон PageObject</h2>
+  <p>До использвания PageObject взаимодействие с элементами происходит в тесте</p>
+  <pre>
+    <code class="language-javascript">
+      describe('angularjs homepage', function() {
+        it('should greet the named user', function() {
+          // создали и зашрузили страницу
+          var angularHomepage = new AngularHomepage();
+          angularHomepage.get();
+          // выполнили действие
+          angularHomepage.setName('Julie');
+          // проверили
+          expect(angularHomepage.getGreeting())
+            .to.equal('Hello Julie!');
+        });
+      });
+    </code>
+  </pre>
 </section>
 <section class="slide last">
   <p class="thanx">Задавайте вопросы и напишите отзыв о лекции!</p>
