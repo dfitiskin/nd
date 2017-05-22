@@ -90,35 +90,58 @@
   </ul>
 </section>
 <section class="slide">
+  <h2>Простейшее приложение. Контроллер</h2>
   <pre>
     <code class="language-javascript line-numbers">
-      angular.module('app', [])
-        .controller("PhoneListController", PhonesController)
-        .service('PhonesService', PhonesService);
-
       function PhonesController(PhonesService) {
-          this.phonesList = PhonesService.phones;
-          this.add = PhonesService.add;
-      }
-
-      function PhonesService() {
-          this.phones = ["Samsung", "IPhone", "Nokia"];
-      }
-
-      PhonesService.prototype.add = function (model) {
-          if (this.phones.indexOf(model) < 0)
-              this.phones.push(model)
+        this.phonesList = PhonesService.phones;
+        this.add = PhonesService.add;
       }
     </code>
   </pre>
 </section>
 <section class="slide">
+  <h2>Простейшее приложение. Сервис</h2>
+  <pre>
+    <code class="language-javascript line-numbers">
+      function PhonesService() {
+        this.phones = ["Samsung", "IPhone", "Nokia"];
+      }
+
+      PhonesService.prototype.add = function (model) {
+        if (this.phones.indexOf(model) < 0)
+          this.phones.push(model)
+      }
+    </code>
+  </pre>
+</section>
+<section class="slide">
+  <h2>Простейшее приложение. Модули</h2>
+  <pre>
+    <code class="language-javascript line-numbers">
+      angular.module('app', ['app.controllers']);
+
+      angular.module('app.controllers', ['app.services'])
+        .controller("PhonesCtrl", PhonesCtrl)
+
+      angular.module('app.services', [])
+        .service('PhonesService', PhonesService);
+    </code>
+  </pre>
+</section>
+<section class="slide chapter">
   <h2>Что тестировать?</h2>
-  <ul>
-    <li>Модуль</li>
-    <li>Сервис</li>
-    <li>Контроллер</li>
-  </ul>
+</section>
+<section class="slide">
+  <h2>Всё!</h2>
+  <div style="padding-top: 130px">
+    <img src="pic/karma/cogs.jpg" style="float: right; width: 450px; margin: -110px 0 0 30px ">
+    <ul>
+      <li><strong>Модули</strong></li>
+      <li><strong>Сервисы</strong></li>
+      <li><strong>Контроллеры</strong></li>
+    </ul>
+  </div>
 </section>
 <section class="slide">
   <h2>Модуль</h2>
