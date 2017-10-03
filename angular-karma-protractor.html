@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <title>Karma - Protractor</title>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="node_modules/shower-ribbon/styles/screen-4x3.css">
+  <link rel="stylesheet" href="css/prism.css">
+  <link rel="stylesheet" href="css/prism-fix.css">
+  <link rel="stylesheet" href="css/netology.css">
+</head>
+<body class="shower list">
+<header class="caption">
+  <h1>Работа с файлами</h1>
+  <p>Алексей Кулагин, Нетология</p>
+</header>
+
+<section class="slide" id="cover">
+  <h2>
+    Тестирование клиента
+    <br/>
+    <small>Karma, Protractor</small>
+    <small>Mocha, Jasmine, QUnit</small>
+  </h2>
+  <p>
+    <img src="i/al.qlagin.jpg" alt="" class="avatar">
+    Алексей Кулагин <span class="position">Нетология</span>
+  </p>
+</section>
+<section class="slide author" id="author">
+  <img src="i/al.qlagin.jpg" alt="">
+  <h1>Алексей Кулагин</h1>
+  <ul class="contacts">
+    <li><a href="mailto:al.qlagin@gmail.com"><i class="fa fa-envelope-o" aria-hidden="true"></i>al.qlagin@gmail.com</a>
+    </li>
+    <li><a href="skype:al_qlagin?call"><i class="fa fa-skype" aria-hidden="true"></i>al_qlagin</a></li>
+    <li><a href="https://fb.me/alex.kulagin"><i class="fa fa-facebook" aria-hidden="true"></i>fb.me/alex.kulagin</a>
+    </li>
+  </ul>
+</section>
+
+<section class="slide" id="roadmap">
+  <h2>План занятия</h2>
+  <ol class="">
+    <li><a href="#types">Типы тестов</a></li>
+    <li><a href="#unit">Юнит тесты</a></li>
+    <li><a href="#e2e">Приёмочные тесты</a></li>
+    <li><a href="#pageobject">Шаблон PageObject</a></li>
+  </ol>
+</section>
+
+<section class="slide chapter" id="types">
+  <h2>Организация тестирования</h2>
+</section>
+<section class="slide">
+  <!--Пирамида-->
+  <h2>Соотношение количества тестов в проекте</h2>
+  <img src="pic/mocha/testing-pyramid.png" width="90%">
+</section>
+<section class="slide chapter" id="unit">
+  <h2>Юнит тесты с Karma</h2>
+</section>
+<section class="slide">
+  <h2>Karma - это...</h2>
+  <p>Karma – инструмент на node.js, позволяющий запускать JavaScript код в нескольких браузерах</p>
+  <img src="pic/karma/law-of-karma.jpg" width="100%">
+</section>
+<section class="slide">
+  <h2>Karma – это не...</h2>
+  <p>Karma – это не фреймворк/библиотека для тестирования, её можно использовать совместно с</p>
+  <ul>
+    <li>Mocha</li>
+    <li>Jasmine</li>
+    <li>QUnit</li>
+    <li>либо же что-то совсем другое, но написав свой адаптер</li>
+  </ul>
+</section>
+<section class="slide">
+  <h2>Браузеры, которые можно использовать</h2>
+  <ul>
+    <li>Chrome and Chrome Canary (npm install karma-chrome-launcher)</li>
+    <li>Firefox (npm install karma-firefox-launcher)</li>
+    <li>Safari (npm install karma-safari-launcher)</li>
+    <li>PhantomJS (npm install karma-phantomjs-launcher)</li>
+    <li>Opera (npm install karma-opera-launcher)</li>
+    <li>IE (npm install karma-ie-launcher)</li>
+    <li>BrowserStack (npm install karma-browserstack-launcher)</li>
+    <li>и многие другие...</li>
+  </ul>
+</section>
+<section class="slide">
+  <h2>Простейшее приложение. Контроллер</h2>
+  <pre>
+    <code class="language-javascript line-numbers">
+      function PhonesController(PhonesService) {
+        this.phonesList = PhonesService.phones;
+        this.add = PhonesService.add;
+      }
+    </code>
+  </pre>
+</section>
+<section class="slide">
+  <h2>Простейшее приложение. Сервис</h2>
+  <pre>
+    <code class="language-javascript line-numbers">
+      function PhonesService() {
+        this.phones = ["Samsung", "IPhone", "Nokia"];
+      }
+
+      PhonesService.prototype.add = function (model) {
+        if (this.phones.indexOf(model) < 0)
+          this.phones.push(model)
+      }
+    </code>
+  </pre>
+</section>
+<section class="slide">
+  <h2>Простейшее приложение. Модули</h2>
+  <pre>
+    <code class="language-javascript line-numbers">
+      angular.module('app', ['app.controllers']);
+
+      angular.module('app.controllers', ['app.services'])
+        .controller("PhonesCtrl", PhonesCtrl)
+
+      angular.module('app.services', [])
+        .service('PhonesService', PhonesService);
+    </code>
+  </pre>
+</section>
+<section class="slide chapter">
+  <h2>Что тестировать?</h2>
+</section>
+<section class="slide">
+  <h2>Всё!</h2>
+  <div style="padding-top: 130px">
+    <img src="pic/karma/cogs.jpg" style="float: right; width: 450px; margin: -110px 0 0 30px ">
+    <ul>
+      <li><strong>Модули</strong></li>
+      <li><strong>Сервисы</strong></li>
+      <li><strong>Контроллеры</strong></li>
+    </ul>
+  </div>
+</section>
+<section class="slide">
+  <h2>Модуль</h2>
+  <p>Нужный нам модуль должен быть подключен</p>
+  <pre>
+    <code class="language-javascript line-numbers">
+      describe("App module", function () {
+        let module;
+        before(() => {
+            module = angular.module("app")
+        });
+        ...
+      });
+    </code>
+  </pre>
+</section>
+<section class="slide">
+  <h2>Модуль</h2>
+  <p>... и подключать все необходимые зависимости</p>
+  <pre>
+    <code class="language-javascript line-numbers">
+      describe("dependencies", function(){
+        it("should include app.controllers", function(){
+            const deps = module.requires;
+            <mark>expect(deps).to.include('app.controllers');</mark>
+        })
+      })
+    </code>
+  </pre>
+</section>
+<section class="slide">
+  <h2>Сервис</h2>
+  <p>Подключаем модуль <code>app.services</code> и с помощью injector получаем PhonesService</p>
+  <pre>
+    <code class="language-javascript">
+      describe('PhoneService', () => {
+        let service;
+        beforeEach(module("app.services"));
+        beforeEach(inject(PhonesService => {
+            service = PhonesService;
+        }));
+      });
+    </code>
+  </pre>
+</section>
+<section class="slide">
+  <h2>Сервис</h2>
+  <p>Позитивный тест: добавили новую модель телефона и убедились что длина списка изменилась</p>
+  <pre>
+    <code class="language-javascript">
+      it('should add phone models', () => {
+          service.add('Sony');
+          chai.expect(service.phones).length(4);
+      });
+    </code>
+  </pre>
+</section>
+<section class="slide">
+  <h2>Сервис</h2>
+  <p>Негативный тест: добавили модель телефона, которая уже есть в списке, и убедились что длина списка не
+    изменилась</p>
+  <pre>
+    <code class="language-javascript">
+      it('should not add model presented in list', () => {
+          service.add(service.phones[0]);
+          chai.expect(service.phones).length(3);
+      })
+    </code>
+  </pre>
+</section>
+<section class="slide">
+  <h2>“Негативное” тестирование</h2>
+  <p><strong>“Негативное” тестирование</strong> – это тестирование на данных или сценариях, которые соответствуют
+    нештатному поведению тестируемой системы – различные сообщения об ошибках, исключительные ситуации, “запредельные”
+    состояния и т.п.
+    Основной целью “негативного” тестирования является проверка устойчивости системы к воздействиям различного рода,
+    валидация неверного набора данных, проверка обработки исключительных ситуаций (как в реализации самих программных
+    алгоритмов, так и в логике бизнес-правил).</p>
+</section>
+<section class="slide">
+  <h2>Контроллер</h2>
+  <p>Для тестирования контроллера его нужно подготовить:</p>
+  <ul>
+    <li>В помощью инжектора получить зависимости и
+      <nobr><code>$controller</code> - сервис для создания объекта контроллера</nobr>
+    </li>
+    <li>Создать нужный контроллер
+      <nobr><code>$controller('PhonesCtrl', DIObject)</code></nobr>
+    </li>
+  </ul>
+  <pre>
+    <code class="language-javascript">
+      describe("PhonesCtrls", () => {
+        let ctrl, service;
+        beforeEach(module("app"));
+        beforeEach(inject(($controller, PhonesService) => {
+          ctrl = $controller('PhonesCtrl', {PhonesService});
+          service = PhonesService;
+        }));
+      });
+    </code>
+  </pre>
+</section>
+<section class="slide">
+  <h2>Контроллер</h2>
+  <p>Проверяем свойста контроллера, которые могут быть использованы в шаблоне</p>
+  <pre>
+    <code class="language-javascript">
+      it('should have same phone list as service', () => {
+          // в этом случает проверяется равенство по ссылке
+          // ctrl.phones автоматически изменится
+          // вместе с PhonesService.phones
+          chai.expect(ctrl.phones).to.equal(service.phones);
+      })
+    </code>
+  </pre>
+</section>
+<section class="slide">
+  <h2>Контроллер</h2>
+  <p>Проверим методы контроллера, которые могут быть вызваны из шаблона</p>
+  <pre>
+    <code class="language-javascript">
+      it('should add phone with PhonesService.add', () => {
+        // создаём обертку над методом сервиса
+        // ничего не делает, но знает сколько раз вызвали
+        const stub = sinon.stub(service, 'add');
+
+        // выполняем реальное действие в контроллере
+        ctrl.add("Sony");
+        // проверяем что метод сервиса действительно вызван
+        sinon.assert.calledOnce(stub);
+      });
+    </code>
+  </pre>
+  <p>Реальная бизнес-логика должна быть реализована в сервисе. Поэтому нужно проверить, что вызывается соответствующий
+    метод</p>
+</section>
+<section class="slide chapter" id="e2e">
+  <h2>End to end - Приёмочные тесты</h2>
+</section>
+<section class="slide">
+  <h2>Protractor</h2>
+  <p>Protractor - это end-to-end фреймворк для AngularJS, который запускает реальный браузер и работает с ним как
+    пользователь</p>
+  <p><img src="pic/karma/protractor-logo-450.png" width="100%"></p>
+</section>
+<section class="slide">
+  <h2>... запускает реальный браузер ...</h2>
+  <p style="padding-top: 130px; text-align: justify">
+    <img style="float: right; margin: -100px 0 0 30px" src="pic/karma/webdriverio.png" width="300">
+    Protractor реализован поверх WebDriverJS, который использует нативные события и специфичные для браузера драйверы
+    для взаимодействия с приложением как это сделал бы пользователь</p>
+</section>
+<section class="slide">
+  <h2>Объект browser</h2>
+  <p>Protractor глобально определяет объект browser, который используется для вызова команд уровня браузера,
+    таких как переход по ссылке с помощью <code>browser.get</code>
+  </p>
+</section>
+<section class="slide">
+  <h2>Взаимодействие с элементами</h2>
+  <p>Для взаимодействия с элементами используются глобальные объекты <code>element</code> и <code>by</code>
+  </p>
+  <p>
+    <code>element</code> - функция для поиска HTML элементов. Она возвращает ElementFinder, который может быть
+    использован для взаимодействия
+    с DOM-элементами
+  </p>
+  <p>
+    <code>by</code> - предназначен для создания объекта Locator, который описывает как найти элемент
+  </p>
+</section>
+<section class="slide">
+  <h2>Способы поиска локаторов</h2>
+
+  <ul class="">
+    <li>
+      <code>by.model('first')</code> для поиска
+      <nobr><code>ng-model="first"</code></nobr>
+    </li>
+    <li>
+      <code>by.id('gobutton')</code> для поиска по заданному id
+      <nobr><code>&lt;button id="gobutton"&gt;</code></nobr>
+    </li>
+    <li>
+      <code>by.binding('latest')</code> для поиска элемента связанного с
+      <nobr><code>{{latest}}</code></nobr>
+    </li>
+    <li>
+      <code>by.css('btn')</code> для поиска элемента по классу
+      <nobr><code>&lt;button class="btn"&gt;</code></nobr>
+    </li>
+  </ul>
+</section>
+<section class="slide">
+  <h2>Взаимодействие со списоком элементов</h2>
+  <p>Для поиска набора элементов используется метод
+    <nobr><code>element.all()</code></nobr>
+  </p>
+  <ul>
+    <li>Например, для получения списка сторок таблицы выведенных через
+      <code>ng-repeat</code>:
+      <nobr><code>list = element.all(by.repeater('phone in phones'))</code></nobr>
+    </li>
+    <li>В этом случае
+      <nobr><code>list</code></nobr>
+      получит дополнительные методы <code>ElementArrayFinder</code>, такие как
+      <nobr><code>list.first()</code></nobr>
+      ,
+      <nobr><code>list.last()</code></nobr>
+      и т.п.
+    </li>
+  </ul>
+</section>
+<section class="slide chapter" id="pageobject">
+  <h2>Паттерн PageObject</h2>
+</section>
+<section class="slide">
+  <h2>Шаблон PageObject</h2>
+  <p>PageObject - объект скрывающий работу с элементами страницы давая удобное API</p>
+  <ul>
+    <li>Помогает писать более чистые тесты</li>
+    <li>Может быть использован в нескольких тестах</li>
+    <li>При смене разметки страницы изменяется только PageObject, а тесты остаются неизменными</li>
+  </ul>
+</section>
+<section class="slide">
+  <h2>Шаблон PageObject</h2>
+  <p>До использвания PageObject взаимодействие с элементами происходит в тесте</p>
+  <pre>
+    <code class="language-javascript">
+      describe('angularjs homepage', function() {
+        it('should greet the named user', function() {
+          browser.get('http://www.angularjs.org');
+          element(by.model('yourName')).sendKeys('Julie');
+          var greeting = element(by.binding('yourName'));
+          expect(greeting.getText()).toEqual('Hello Julie!');
+        });
+      });
+    </code>
+  </pre>
+</section>
+<section class="slide">
+  <h2>Шаблон PageObject</h2>
+  <p>Скрываем детали работы с элементами страницы в <code>AngularHomepage</code></p>
+  <pre>
+    <code class="language-javascript">
+      var AngularHomepage = function() {
+        var nameInput = element(by.model('yourName'));
+        var greeting = element(by.binding('yourName'));
+        this.get = function() {
+          browser.get('http://www.angularjs.org');
+        };
+        this.setName = function(name) {
+          nameInput.sendKeys(name);
+        };
+        this.getGreeting = function() {
+          return greeting.getText();
+        };
+      };
+    </code>
+  </pre>
+</section>
+<section class="slide">
+  <h2>Шаблон PageObject</h2>
+  <p>До использвания PageObject взаимодействие с элементами происходит в тесте</p>
+  <pre>
+    <code class="language-javascript">
+      describe('angularjs homepage', function() {
+        it('should greet the named user', function() {
+          // создали и зашрузили страницу
+          var angularHomepage = new AngularHomepage();
+          angularHomepage.get();
+          // выполнили действие
+          angularHomepage.setName('Julie');
+          // проверили
+          expect(angularHomepage.getGreeting())
+            .to.equal('Hello Julie!');
+        });
+      });
+    </code>
+  </pre>
+</section>
+<section class="slide last">
+  <p class="thanx">Задавайте вопросы и напишите отзыв о лекции!</p>
+  <address>Алексей Кулагин</address>
+  <ul class="contacts">
+    <li><a href="mailto:al.qlagin@gmail.com"><i class="fa fa-envelope-o" aria-hidden="true"></i>al.qlagin@gmail.com</a>
+    </li>
+    <li><a href="skype:al_qlagin?call"><i class="fa fa-skype" aria-hidden="true"></i>al_qlagin</a></li>
+    <li><a href="https://fb.me/alex.kulagin"><i class="fa fa-facebook" aria-hidden="true"></i>fb.me/alex.kulagin</a>
+    </li>
+  </ul>
+</section>
+
+
+<div class="progress"></div>
+<script src="node_modules/shower-core/shower.min.js"></script>
+<script src="js/prism.js?v=2"></script>
+<script src="https://use.fontawesome.com/30b5a52164.js"></script>
+</body>
+</html>
